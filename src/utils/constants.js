@@ -1,7 +1,8 @@
 // 应用常量定义
 
 export const GAME_TYPES = {
-  NUMBER_BOMB: 'numberBomb'
+  NUMBER_BOMB: 'numberBomb',
+  TIANJIU_POKER: 'tianjiuPoker'
 };
 
 export const GAME_STATUS = {

@@ -174,6 +174,165 @@ class NumberBombGame {
     }
 }
 
+// 甜酒牌游戏类
+class TianjiuPokerGame {
+    constructor(room) {
+        this.room = room;
+        this.cards = ['A', 'K', 'Q', 'J', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'big_joker', 'small_jocker'];
+        this.currentCard = null;
+        this.currentPlayer = null;
+        this.isFinished = false;
+        this.reservedCards = new Map(); // 用户保留的8号牌
+        this.gamePhase = 'waiting'; // waiting, card_drawn, effect_active
+        this.cardEffects = {
+            'A': '指定牌：拿到这张牌，可以指定任意玩家喝一杯',
+            'K': '小姐牌：任何人喝酒，小姐都需要陪喝一杯。喝酒的说："小姐在哪呢"即可召唤，拿到此牌的说:"来啦来啦大爷我在这呢"',
+            'Q': '打一样的字：拿到这张牌的玩家在群里扣字，全场要跟着打一样的字，慢的或者没打的喝',
+            'J': '逛三园：拿到此牌的人需要喊:" 星期天逛公园"下个人喊" 什么园"接着下个人喊" xx园"可以是蔬菜园、花园、动物园',
+            '1': '喝一杯：自己喝一杯',
+            '2': '成语接龙：成语接龙，接不到词的喝',
+            '3': '数字炸弹：1-100，选中数字，炸的喝',
+            '4': '几棵柳树扭几扭：拿到此牌的人需要说几棵柳树扭几扭如:"6颗柳树扭6扭"，那下一个人就要说"7颗柳树扭7扭"',
+            '5': '奥特曼语录：啊啊啊啊啊啊啊！燃烧吧！小宇宙!看我究极无敌天马流星拳！',
+            '6': '表情包：拿到此牌的人快速在群里打出一个表情包，其他人要跟着打，打慢的喝',
+            '7': '真心话：拿到此牌的人指定一个人问真心话，不回答就喝酒',
+            '8': '趣味生煎：拿到这张牌的玩家可以趣味生煎，如果没有要喝三杯才能去（可保留）',
+            '9': '唱歌：拿到此牌的人找一首歌有感情的读出来',
+            '10': '撒娇卖萌八连：好不好嘛 求求你了 拜托拜托 行不行吖 我不管嘛 你最好了 我爱你呀 宝贝亲亲',
+            'big_joker': '甜酒大王：红包牌，拿到此牌的玩家发红包一个，随意',
+            'small_jocker': '甜酒小王：电话牌，给异性打电话，说我好想你啊'
+        };
+    }
+
+    start() {
+        const users = Array.from(this.room.users.values());
+        if (users.length < 2) {
+            return { success: false, error: '至少需要2个玩家' };
+        }
+        this.gamePhase = 'waiting';
+        return { success: true };
+    }
+
+    drawCard(hostId) {
+        const users = Array.from(this.room.users.values());
+        if (users.length < 2) {
+            return { success: false, error: '至少需要2个玩家' };
+        }
+
+        // 随机选择一张牌
+        const randomCardIndex = Math.floor(Math.random() * this.cards.length);
+        this.currentCard = this.cards[randomCardIndex];
+        
+        // 随机选择一个玩家（包括房主在内的所有玩家）
+        const randomPlayerIndex = Math.floor(Math.random() * users.length);
+        this.currentPlayer = users[randomPlayerIndex];
+        
+        this.gamePhase = 'card_drawn';
+
+        // 记录抽牌日志
+        console.log(`🎰 甜酒牌抽牌: 牌=${this.currentCard}, 获得者=${this.currentPlayer.nickname} (${this.currentPlayer.id}), 总人数=${users.length}`);
+        console.log(`📋 参与玩家: ${users.map(u => u.nickname).join('、')}`);
+
+        return {
+            success: true,
+            card: this.currentCard,
+            player: {
+                id: this.currentPlayer.id,
+                nickname: this.currentPlayer.nickname
+            },
+            effect: this.cardEffects[this.currentCard]
+        };
+    }
+
+    useReservedCard(userId, targetUserId = null) {
+        if (!this.reservedCards.has(userId)) {
+            return { success: false, error: '你没有保留的8号牌' };
+        }
+
+        // 使用保留的8号牌
+        this.reservedCards.delete(userId);
+        const user = this.room.users.get(userId);
+        const targetUser = targetUserId ? this.room.users.get(targetUserId) : null;
+
+        return {
+            success: true,
+            action: 'use_reserved_8',
+            user: { id: user.id, nickname: user.nickname },
+            target: targetUser ? { id: targetUser.id, nickname: targetUser.nickname } : null,
+            effect: '趣味生煎：使用保留的8号牌'
+        };
+    }
+
+    handleCardEffect(action, data = {}) {
+        if (this.currentCard === '8' && data.reserve) {
+            // 保留8号牌
+            this.reservedCards.set(this.currentPlayer.id, this.currentCard);
+            return {
+                success: true,
+                action: 'card_reserved',
+                card: this.currentCard,
+                player: { id: this.currentPlayer.id, nickname: this.currentPlayer.nickname }
+            };
+        }
+
+        // 根据不同的牌执行不同的效果
+        switch (this.currentCard) {
+            case 'A':
+                if (!data.targetUserId) {
+                    return { success: false, error: '请选择要指定的玩家' };
+                }
+                const targetUser = this.room.users.get(data.targetUserId);
+                return {
+                    success: true,
+                    action: 'designate_drink',
+                    target: { id: targetUser.id, nickname: targetUser.nickname },
+                    message: `${this.currentPlayer.nickname} 指定 ${targetUser.nickname} 喝一杯！`
+                };
+            
+            case '1':
+                return {
+                    success: true,
+                    action: 'self_drink',
+                    message: `${this.currentPlayer.nickname} 自己喝一杯！`
+                };
+            
+            case '3':
+                // 启动数字炸弹小游戏
+                return {
+                    success: true,
+                    action: 'start_number_bomb',
+                    message: `${this.currentPlayer.nickname} 触发数字炸弹！`
+                };
+            
+            default:
+                return {
+                    success: true,
+                    action: 'show_effect',
+                    message: `${this.currentPlayer.nickname} 抽到了 ${this.currentCard}：${this.cardEffects[this.currentCard]}`
+                };
+        }
+    }
+
+    finishRound() {
+        this.currentCard = null;
+        this.currentPlayer = null;
+        this.gamePhase = 'waiting';
+        return { success: true };
+    }
+
+    getGameState() {
+        return {
+            currentCard: this.currentCard,
+            currentPlayer: this.currentPlayer ? {
+                id: this.currentPlayer.id,
+                nickname: this.currentPlayer.nickname
+            } : null,
+            gamePhase: this.gamePhase,
+            reservedCards: Array.from(this.reservedCards.keys())
+        };
+    }
+}
+
 // Socket.io 连接处理
 io.on('connection', (socket) => {
     console.log('用户连接:', socket.id);
@@ -270,13 +429,20 @@ io.on('connection', (socket) => {
             
             // 如果游戏进行中，发送游戏状态
             if (room.game && room.gameState === 'playing') {
-                socket.emit('gameStarted', {
-                    gameType: 'numberBomb',
-                    currentPlayerId: room.game.currentPlayer.id,
-                    rangeMin: room.game.currentRange.min,
-                    rangeMax: room.game.currentRange.max,
-                    bombNumber: room.game.bombNumber
-                });
+                if (room.gameType === 'numberBomb') {
+                    socket.emit('gameStarted', {
+                        gameType: 'numberBomb',
+                        currentPlayerId: room.game.currentPlayer ? room.game.currentPlayer.id : null,
+                        rangeMin: room.game.currentRange.min,
+                        rangeMax: room.game.currentRange.max,
+                        bombNumber: room.game.bombNumber
+                    });
+                } else if (room.gameType === 'tianjiuPoker') {
+                    socket.emit('gameStarted', {
+                        gameType: 'tianjiuPoker',
+                        gameState: room.game.getGameState()
+                    });
+                }
             }
             
             console.log(`✅ 用户重连成功: ${existingUser.nickname} (${data.userId})`);
@@ -436,6 +602,187 @@ io.on('connection', (socket) => {
                     }
                 });
             }
+        } else {
+            socket.emit('error', result.error);
+        }
+    });
+
+    // 甜酒牌游戏事件处理
+    socket.on('startTianjiuPoker', (data) => {
+        // 通过 socket.id 查找当前用户
+        let currentUser = null;
+        for (const [userId, user] of users.entries()) {
+            if (user.socketId === socket.id) {
+                currentUser = user;
+                break;
+            }
+        }
+        
+        if (!currentUser || !currentUser.roomId) {
+            socket.emit('error', '用户状态无效');
+            return;
+        }
+        
+        const room = rooms.get(currentUser.roomId);
+        if (!room || room.hostId !== currentUser.id) {
+            socket.emit('error', '只有房主可以开始游戏');
+            return;
+        }
+
+        // 创建甜酒牌游戏实例
+        room.game = new TianjiuPokerGame(room);
+        room.gameType = 'tianjiuPoker';
+        room.gameState = 'playing';
+
+        const result = room.game.start();
+        if (result.success) {
+            io.to(currentUser.roomId).emit('gameStarted', {
+                gameType: 'tianjiuPoker',
+                gameState: room.game.getGameState()
+            });
+        } else {
+            socket.emit('error', result.error);
+        }
+    });
+
+    socket.on('drawTianjiuCard', (data) => {
+        // 通过 socket.id 查找当前用户
+        let currentUser = null;
+        for (const [userId, user] of users.entries()) {
+            if (user.socketId === socket.id) {
+                currentUser = user;
+                break;
+            }
+        }
+        
+        if (!currentUser || !currentUser.roomId) {
+            socket.emit('error', '用户状态无效');
+            return;
+        }
+        
+        const room = rooms.get(currentUser.roomId);
+        if (!room || !room.game || room.gameType !== 'tianjiuPoker') {
+            socket.emit('error', '游戏状态无效');
+            return;
+        }
+
+        if (room.hostId !== currentUser.id) {
+            socket.emit('error', '只有房主可以抽牌');
+            return;
+        }
+
+        const result = room.game.drawCard(currentUser.id);
+        if (result.success) {
+            io.to(currentUser.roomId).emit('tianjiuCardDrawn', {
+                card: result.card,
+                player: result.player,
+                effect: result.effect,
+                gameState: room.game.getGameState()
+            });
+        } else {
+            socket.emit('error', result.error);
+        }
+    });
+
+    socket.on('handleTianjiuCardEffect', (data) => {
+        // 通过 socket.id 查找当前用户
+        let currentUser = null;
+        let currentUserId = null;
+        for (const [userId, user] of users.entries()) {
+            if (user.socketId === socket.id) {
+                currentUser = user;
+                currentUserId = userId;
+                break;
+            }
+        }
+        
+        if (!currentUser || !currentUser.roomId) {
+            socket.emit('error', '用户状态无效');
+            return;
+        }
+        
+        const room = rooms.get(currentUser.roomId);
+        if (!room || !room.game || room.gameType !== 'tianjiuPoker') {
+            socket.emit('error', '游戏状态无效');
+            return;
+        }
+
+        const result = room.game.handleCardEffect(data.action, data);
+        if (result.success) {
+            io.to(currentUser.roomId).emit('tianjiuCardEffect', {
+                ...result,
+                gameState: room.game.getGameState()
+            });
+        } else {
+            socket.emit('error', result.error);
+        }
+    });
+
+    socket.on('useReservedCard', (data) => {
+        // 通过 socket.id 查找当前用户
+        let currentUser = null;
+        let currentUserId = null;
+        for (const [userId, user] of users.entries()) {
+            if (user.socketId === socket.id) {
+                currentUser = user;
+                currentUserId = userId;
+                break;
+            }
+        }
+        
+        if (!currentUser || !currentUser.roomId) {
+            socket.emit('error', '用户状态无效');
+            return;
+        }
+        
+        const room = rooms.get(currentUser.roomId);
+        if (!room || !room.game || room.gameType !== 'tianjiuPoker') {
+            socket.emit('error', '游戏状态无效');
+            return;
+        }
+
+        const result = room.game.useReservedCard(currentUserId, data.targetUserId);
+        if (result.success) {
+            io.to(currentUser.roomId).emit('tianjiuReservedCardUsed', {
+                ...result,
+                gameState: room.game.getGameState()
+            });
+        } else {
+            socket.emit('error', result.error);
+        }
+    });
+
+    socket.on('finishTianjiuRound', (data) => {
+        // 通过 socket.id 查找当前用户
+        let currentUser = null;
+        for (const [userId, user] of users.entries()) {
+            if (user.socketId === socket.id) {
+                currentUser = user;
+                break;
+            }
+        }
+        
+        if (!currentUser || !currentUser.roomId) {
+            socket.emit('error', '用户状态无效');
+            return;
+        }
+        
+        const room = rooms.get(currentUser.roomId);
+        if (!room || !room.game || room.gameType !== 'tianjiuPoker') {
+            socket.emit('error', '游戏状态无效');
+            return;
+        }
+
+        if (room.hostId !== currentUser.id) {
+            socket.emit('error', '只有房主可以结束回合');
+            return;
+        }
+
+        const result = room.game.finishRound();
+        if (result.success) {
+            io.to(currentUser.roomId).emit('tianjiuRoundFinished', {
+                gameState: room.game.getGameState()
+            });
         } else {
             socket.emit('error', result.error);
         }

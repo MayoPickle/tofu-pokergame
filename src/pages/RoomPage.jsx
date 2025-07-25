@@ -19,7 +19,9 @@ import {
 } from '@ant-design/icons';
 import socketManager from '../utils/socket';
 import { storage } from '../utils/storage';
+import { GAME_TYPES } from '../utils/constants';
 import NumberBombGame from '../components/NumberBombGame';
+import TianjiuPokerGame from '../components/TianjiuPokerGame';
 import UserList from '../components/UserList';
 import ChatPanel from '../components/ChatPanel';
 
@@ -31,6 +33,7 @@ const RoomPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [bubbles, setBubbles] = useState([]);
+  const [gameType, setGameType] = useState(null);
 
   // 生成泡泡数据
   useEffect(() => {
@@ -410,10 +413,90 @@ const RoomPage = () => {
                   padding: '24px',
                   minHeight: '500px'
                 }}>
-                  <NumberBombGame 
-                    userInfo={userInfo} 
-                    isHost={userInfo.isHost} 
-                  />
+                  {!gameType ? (
+                    // 游戏选择界面
+                    <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                      <Title level={2} style={{ 
+                        color: 'white', 
+                        marginBottom: '30px',
+                        background: 'linear-gradient(45deg, #ff6b6b, #feca57)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}>
+                        选择游戏
+                      </Title>
+                      
+                      {userInfo.isHost ? (
+                        <Space direction="vertical" size="large">
+                          <Button 
+                            type="primary" 
+                            size="large"
+                            onClick={() => setGameType(GAME_TYPES.NUMBER_BOMB)}
+                            style={{
+                              background: 'linear-gradient(45deg, #ff6b6b, #feca57)',
+                              border: 'none',
+                              borderRadius: '25px',
+                              padding: '12px 32px',
+                              fontSize: '16px',
+                              width: '200px',
+                              height: '50px'
+                            }}
+                          >
+                            数字炸弹
+                          </Button>
+                          
+                          <Button 
+                            type="primary" 
+                            size="large"
+                            onClick={() => setGameType(GAME_TYPES.TIANJIU_POKER)}
+                            style={{
+                              background: 'linear-gradient(45deg, #feca57, #ff6b6b)',
+                              border: 'none',
+                              borderRadius: '25px',
+                              padding: '12px 32px',
+                              fontSize: '16px',
+                              width: '200px',
+                              height: '50px'
+                            }}
+                          >
+                            甜酒牌
+                          </Button>
+                        </Space>
+                      ) : (
+                        <div style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '16px' }}>
+                          等待房主选择游戏...
+                        </div>
+                      )}
+                    </div>
+                  ) : gameType === GAME_TYPES.NUMBER_BOMB ? (
+                    <NumberBombGame 
+                      userInfo={userInfo} 
+                      isHost={userInfo.isHost} 
+                    />
+                  ) : gameType === GAME_TYPES.TIANJIU_POKER ? (
+                    <TianjiuPokerGame 
+                      userInfo={userInfo} 
+                      isHost={userInfo.isHost}
+                      userList={users}
+                    />
+                  ) : null}
+                  
+                  {/* 返回游戏选择按钮 */}
+                  {gameType && userInfo.isHost && (
+                    <div style={{ position: 'absolute', top: '15px', right: '15px' }}>
+                      <Button 
+                        size="small"
+                        onClick={() => setGameType(null)}
+                        style={{ 
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          color: 'white'
+                        }}
+                      >
+                        返回选择
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </Col>
               
