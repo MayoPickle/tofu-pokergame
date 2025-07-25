@@ -322,12 +322,12 @@ const NumberBombGame = ({ userInfo, isHost }) => {
       </Title>
       {gameState.loser && (
         <div style={{
-          background: 'rgba(255, 107, 107, 0.15)',
-          border: '1px solid rgba(255, 107, 107, 0.3)',
+          background: 'rgba(139, 69, 19, 0.15)',
+          border: '1px solid rgba(139, 69, 19, 0.3)',
           borderRadius: '16px',
           padding: '20px',
           marginBottom: '32px',
-          boxShadow: '0 0 20px rgba(255, 107, 107, 0.2)'
+          boxShadow: '0 0 20px rgba(139, 69, 19, 0.2)'
         }}>
           <Text style={{ 
             color: 'white', 
@@ -337,7 +337,7 @@ const NumberBombGame = ({ userInfo, isHost }) => {
           }}>
             💥 炸弹数字是 
             <Tag style={{ 
-              background: 'linear-gradient(135deg, #ff6b6b, #ff8e8e)',
+              background: 'linear-gradient(135deg, #8B4513, #A0522D)',
               border: 'none',
               color: 'white',
               fontSize: '16px',
@@ -345,7 +345,7 @@ const NumberBombGame = ({ userInfo, isHost }) => {
               padding: '4px 12px',
               borderRadius: '8px',
               margin: '0 8px',
-              boxShadow: '0 4px 12px rgba(255, 107, 107, 0.4)'
+              boxShadow: '0 4px 12px rgba(139, 69, 19, 0.4)'
             }}>
               {gameState.bombNumber}
             </Tag>
