@@ -13,8 +13,9 @@ import {
 import { 
   CopyOutlined, 
   LogoutOutlined, 
-  HomeOutlined,
-  TeamOutlined
+  HeartOutlined,
+  TeamOutlined,
+  CoffeeOutlined
 } from '@ant-design/icons';
 import socketManager from '../utils/socket';
 import { storage } from '../utils/storage';
@@ -29,6 +30,21 @@ const RoomPage = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [bubbles, setBubbles] = useState([]);
+
+  // 生成泡泡数据
+  useEffect(() => {
+    const bubbleData = [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 95,
+      size: Math.random() * 12 + 6,
+      duration: Math.random() * 6 + 8,
+      delay: Math.random() * 8,
+      color: ['rgba(255, 107, 107, 0.4)', 'rgba(254, 202, 87, 0.35)', 'rgba(72, 219, 251, 0.3)'][Math.floor(Math.random() * 3)],
+      drift: (Math.random() - 0.5) * 60
+    }));
+    setBubbles(bubbleData);
+  }, []);
 
   useEffect(() => {
     // 获取用户信息
@@ -119,69 +135,255 @@ const RoomPage = () => {
 
   if (loading || !userInfo) {
     return (
-      <Layout style={{ minHeight: '100vh' }}>
+      <Layout style={{ 
+        minHeight: '100vh', 
+        background: 'linear-gradient(145deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* 加载状态的泡泡背景 */}
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 0,
+          overflow: 'hidden'
+        }}>
+          {[...Array(10)].map((_, i) => (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                bottom: '-50px',
+                left: `${Math.random() * 95}%`,
+                width: `${Math.random() * 12 + 6}px`,
+                height: `${Math.random() * 12 + 6}px`,
+                background: ['rgba(255, 107, 107, 0.4)', 'rgba(254, 202, 87, 0.35)', 'rgba(72, 219, 251, 0.3)'][Math.floor(Math.random() * 3)],
+                borderRadius: '50%',
+                animation: `bubbleFloat ${Math.random() * 6 + 8}s infinite linear`,
+                animationDelay: `${Math.random() * 8}s`
+              }}
+            />
+          ))}
+          <style dangerouslySetInnerHTML={{
+            __html: `
+              @keyframes bubbleFloat {
+                0% { transform: translateY(0px) translateX(0px) scale(0.1); opacity: 0; }
+                10% { opacity: 0.8; transform: translateY(-100px) translateX(5px) scale(1); }
+                50% { opacity: 0.6; transform: translateY(-50vh) translateX(15px) scale(0.8); }
+                100% { transform: translateY(-100vh) translateX(30px) scale(0.2); opacity: 0; }
+              }
+            `
+          }} />
+        </div>
         <Content style={{ 
           display: 'flex', 
           alignItems: 'center', 
-          justifyContent: 'center' 
+          justifyContent: 'center',
+          position: 'relative',
+          zIndex: 10
         }}>
-          <div>正在连接房间...</div>
+          <div style={{
+            textAlign: 'center',
+            color: 'white',
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(20px)',
+            padding: '40px 60px',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 12px 48px rgba(0, 0, 0, 0.4)'
+          }}>
+            <CoffeeOutlined style={{ 
+              fontSize: '48px', 
+              color: '#ff6b6b', 
+              marginBottom: '20px',
+              filter: 'drop-shadow(0 0 16px rgba(255, 107, 107, 0.5))'
+            }} />
+            <div style={{ fontSize: '18px', fontWeight: '500' }}>正在连接房间...</div>
+            <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '8px' }}>
+              请稍候片刻
+            </div>
+          </div>
         </Content>
       </Layout>
     );
   }
 
       return (
-      <Layout style={{ minHeight: '100vh', background: '#f0f2f5' }}>
-        <Header 
-          style={{ 
-            background: 'white',
-            borderBottom: '1px solid #f0f0f0',
-            padding: '16px 24px',
-            height: 'auto',
-            lineHeight: 'normal'
-          }}
-        >
+      <Layout style={{ 
+        minHeight: '100vh', 
+        background: 'linear-gradient(145deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* 动态泡泡背景 */}
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 0,
+          overflow: 'hidden'
+        }}>
+          {bubbles.map((bubble) => (
+            <div
+              key={bubble.id}
+              className="bubble"
+              style={{
+                position: 'absolute',
+                bottom: '-50px',
+                left: `${bubble.left}%`,
+                width: `${bubble.size}px`,
+                height: `${bubble.size}px`,
+                background: bubble.color,
+                borderRadius: '50%',
+                filter: 'blur(0.5px)',
+                boxShadow: `inset 0 0 ${bubble.size/3}px rgba(255, 255, 255, 0.4), 0 0 ${bubble.size/2}px ${bubble.color}`,
+                animation: `bubbleFloat ${bubble.duration}s infinite linear`,
+                animationDelay: `${bubble.delay}s`,
+                '--drift': `${bubble.drift}px`
+              }}
+            />
+          ))}
+          <style dangerouslySetInnerHTML={{
+            __html: `
+              @keyframes bubbleFloat {
+                0% { transform: translateY(0px) translateX(0px) scale(0.1); opacity: 0; }
+                10% { opacity: 0.8; transform: translateY(-100px) translateX(5px) scale(1); }
+                50% { opacity: 0.6; transform: translateY(-50vh) translateX(15px) scale(0.8); }
+                100% { transform: translateY(-100vh) translateX(30px) scale(0.2); opacity: 0; }
+              }
+              .bubble { will-change: transform, opacity; backdrop-filter: blur(1px); }
+            `
+          }} />
+        </div>
+        <Header style={{ 
+          background: 'rgba(255, 255, 255, 0.05)', 
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 2px 20px rgba(0, 0, 0, 0.1)',
+          position: 'relative',
+          zIndex: 10,
+          padding: '16px 24px',
+          height: 'auto',
+          lineHeight: 'normal'
+        }}>
           <div style={{ 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
-            minHeight: '48px'
+            minHeight: '48px',
+            maxWidth: '1200px',
+            margin: '0 auto'
           }}>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
-                <Title level={4} style={{ margin: 0, marginRight: '12px' }}>游戏房间</Title>
-                <Tag color="blue" style={{ fontSize: '14px', padding: '4px 8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                <CoffeeOutlined style={{ 
+                  fontSize: '24px', 
+                  color: '#ff6b6b', 
+                  marginRight: '12px',
+                  filter: 'drop-shadow(0 0 8px rgba(255, 107, 107, 0.3))'
+                }} />
+                <Title level={4} style={{ 
+                  margin: 0, 
+                  marginRight: '16px',
+                  color: 'white',
+                  fontSize: '20px',
+                  fontWeight: '600'
+                }}>游戏房间</Title>
+                <Tag style={{ 
+                  fontSize: '14px', 
+                  padding: '6px 12px',
+                  background: 'rgba(72, 219, 251, 0.2)',
+                  border: '1px solid rgba(72, 219, 251, 0.4)',
+                  color: '#48dbfb',
+                  fontWeight: '600',
+                  borderRadius: '8px'
+                }}>
                   {userInfo.roomId}
                 </Tag>
               </div>
-              <div style={{ fontSize: '12px', color: '#666' }}>
-                <TeamOutlined style={{ marginRight: '4px' }} />
+              <div style={{ 
+                fontSize: '14px', 
+                color: 'rgba(255, 255, 255, 0.8)',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <TeamOutlined style={{ marginRight: '6px', color: '#feca57' }} />
                 在线玩家: {users.length} 人
               </div>
             </div>
-            <Space>
+            <Space size="middle">
               <Tooltip title="复制房间链接">
                 <Button 
                   icon={<CopyOutlined />}
                   onClick={copyRoomLink}
+                  style={{
+                    background: 'rgba(254, 202, 87, 0.2)',
+                    border: '1px solid rgba(254, 202, 87, 0.4)',
+                    color: '#feca57',
+                    borderRadius: '8px',
+                    fontWeight: '500'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(254, 202, 87, 0.3)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(254, 202, 87, 0.2)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
                 >
                   复制链接
                 </Button>
               </Tooltip>
               <Tooltip title="返回首页">
                 <Button 
-                  icon={<HomeOutlined />}
+                  icon={<HeartOutlined />}
                   onClick={goHome}
+                  style={{
+                    background: 'rgba(72, 219, 251, 0.2)',
+                    border: '1px solid rgba(72, 219, 251, 0.4)',
+                    color: '#48dbfb',
+                    borderRadius: '8px',
+                    fontWeight: '500'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(72, 219, 251, 0.3)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(72, 219, 251, 0.2)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
                 >
                   首页
                 </Button>
               </Tooltip>
               <Tooltip title="离开房间">
                 <Button 
-                  danger
                   icon={<LogoutOutlined />}
                   onClick={leaveRoom}
+                  style={{
+                    background: 'rgba(255, 107, 107, 0.2)',
+                    border: '1px solid rgba(255, 107, 107, 0.4)',
+                    color: '#ff6b6b',
+                    borderRadius: '8px',
+                    fontWeight: '500'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 107, 107, 0.3)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 107, 107, 0.2)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
                 >
                   离开房间
                 </Button>
@@ -190,30 +392,65 @@ const RoomPage = () => {
           </div>
         </Header>
 
-      <Layout style={{ background: '#f0f2f5' }}>
-        <Content style={{ padding: '24px' }}>
-          <Row gutter={24} style={{ height: '100%' }}>
-            <Col xs={24} lg={16}>
-              <NumberBombGame 
-                userInfo={userInfo} 
-                isHost={userInfo.isHost} 
-              />
-            </Col>
-            
-            <Col xs={24} lg={8}>
-              <Space direction="vertical" style={{ width: '100%' }} size="large">
-                <UserList 
-                  users={users} 
-                  playerCount={users.length}
-                  currentUserId={userInfo.userId}
-                />
-                
-                <ChatPanel 
-                  userInfo={userInfo} 
-                />
-              </Space>
-            </Col>
-          </Row>
+      <Layout style={{ background: 'transparent' }}>
+        <Content style={{ 
+          padding: '24px',
+          position: 'relative',
+          zIndex: 10
+        }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <Row gutter={24} style={{ height: '100%' }}>
+              <Col xs={24} lg={16}>
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderRadius: '20px',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                  padding: '24px',
+                  minHeight: '500px'
+                }}>
+                  <NumberBombGame 
+                    userInfo={userInfo} 
+                    isHost={userInfo.isHost} 
+                  />
+                </div>
+              </Col>
+              
+              <Col xs={24} lg={8}>
+                <Space direction="vertical" style={{ width: '100%' }} size="large">
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '20px',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                    padding: '20px'
+                  }}>
+                    <UserList 
+                      users={users} 
+                      playerCount={users.length}
+                      currentUserId={userInfo.userId}
+                    />
+                  </div>
+                  
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '20px',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                    padding: '20px',
+                    minHeight: '300px'
+                  }}>
+                    <ChatPanel 
+                      userInfo={userInfo} 
+                    />
+                  </div>
+                </Space>
+              </Col>
+            </Row>
+          </div>
         </Content>
       </Layout>
     </Layout>
