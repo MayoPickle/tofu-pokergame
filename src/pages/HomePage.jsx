@@ -12,6 +12,14 @@ import {
   message,
   Form
 } from 'antd';
+import {
+  PlusOutlined,
+  LoginOutlined,
+  RocketOutlined,
+  MessageOutlined,
+  HomeOutlined,
+  CopyOutlined
+} from '@ant-design/icons';
 import socketManager from '../utils/socket';
 import { storage } from '../utils/storage';
 
@@ -113,15 +121,11 @@ const HomePage = () => {
   };
 
   return (
-    <Layout style={{ 
-      minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%)'
-    }}>
+    <Layout style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
       <Header style={{ 
-        background: 'rgba(255, 255, 255, 0.2)', 
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
-        boxShadow: '0 2px 20px rgba(255, 192, 203, 0.3)'
+        background: 'rgba(255, 255, 255, 0.1)', 
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
       }}>
         <div style={{ 
           display: 'flex', 
@@ -130,25 +134,15 @@ const HomePage = () => {
           height: '100%'
         }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Title level={2} style={{ 
-              margin: 0, 
-              color: 'white', 
-              fontFamily: '"PingFang SC", "Hiragino Sans GB", sans-serif',
-              fontWeight: '300',
-              letterSpacing: '2px'
-            }}>
-              甜梦小酒管
+            <RocketOutlined style={{ fontSize: '24px', color: 'white', marginRight: '12px' }} />
+            <Title level={3} style={{ margin: 0, color: 'white' }}>
+              游戏大厅
             </Title>
           </div>
           <Button 
             type="text" 
-            style={{ 
-              color: 'white',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '20px',
-              padding: '4px 16px',
-              background: 'rgba(255, 255, 255, 0.1)'
-            }}
+            style={{ color: 'white' }}
+            icon={<HomeOutlined />}
             onClick={() => window.location.reload()}
           >
             首页
@@ -156,69 +150,40 @@ const HomePage = () => {
         </div>
       </Header>
 
-      <Content style={{ padding: '40px 24px', display: 'flex', flexDirection: 'column' }}>
+      <Content style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
           {/* 欢迎区域 */}
-          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <Title level={1} style={{ 
-              color: 'white', 
-              marginBottom: '24px',
-              fontFamily: '"PingFang SC", "Hiragino Sans GB", sans-serif',
-              fontWeight: '200',
-              fontSize: '3.5em',
-              textShadow: '0 4px 8px rgba(255, 192, 203, 0.3)'
-            }}>
-              欢迎来到甜梦小酒管
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <Title level={1} style={{ color: 'white', marginBottom: '16px' }}>
+              欢迎来到游戏大厅
             </Title>
             <Paragraph style={{ 
-              fontSize: '20px', 
-              color: 'rgba(255, 255, 255, 0.9)',
-              maxWidth: '700px',
-              margin: '0 auto',
-              lineHeight: '1.8',
-              fontWeight: '300'
+              fontSize: '18px', 
+              color: 'rgba(255, 255, 255, 0.8)',
+              maxWidth: '600px',
+              margin: '0 auto'
             }}>
-              在这里与好友分享美好时光，创造专属的甜蜜回忆
+              与好友一起享受精彩的在线游戏体验，创建房间或加入好友的游戏
             </Paragraph>
           </div>
 
           {/* 功能特性 */}
-          <Row gutter={[32, 32]} style={{ marginBottom: '60px' }}>
+          <Row gutter={[24, 24]} style={{ marginBottom: '48px' }}>
             <Col xs={24} md={8}>
               <Card
                 style={{ 
                   height: '100%',
-                  background: 'rgba(255, 255, 255, 0.15)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '20px',
-                  boxShadow: '0 8px 32px rgba(255, 192, 203, 0.2)'
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  border: 'none',
+                  borderRadius: '12px'
                 }}
-                bodyStyle={{ textAlign: 'center', padding: '40px 24px' }}
+                bodyStyle={{ textAlign: 'center', padding: '32px 24px' }}
               >
-                <div style={{ 
-                  width: '80px', 
-                  height: '80px', 
-                  borderRadius: '40px',
-                  background: 'linear-gradient(135deg, #ffeaa7, #fdcb6e)',
-                  margin: '0 auto 24px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 20px rgba(253, 203, 110, 0.4)'
-                }}>
-                  <div style={{ 
-                    width: '40px', 
-                    height: '40px', 
-                    borderRadius: '20px',
-                    background: 'white'
-                  }}></div>
-                </div>
-                <Title level={4} style={{ marginBottom: '16px', color: 'white', fontWeight: '300' }}>
-                  精选小游戏
-                </Title>
-                <Paragraph style={{ color: 'rgba(255, 255, 255, 0.8)', margin: 0, lineHeight: '1.6' }}>
-                  数字炸弹等经典聚会游戏，在轻松愉快中拉近彼此距离
+                <RocketOutlined style={{ fontSize: '48px', color: '#1890ff', marginBottom: '16px' }} />
+                <Title level={4} style={{ marginBottom: '12px' }}>多样小游戏</Title>
+                <Paragraph style={{ color: '#666', margin: 0 }}>
+                  数字炸弹等经典聚会游戏，更多精彩持续更新
                 </Paragraph>
               </Card>
             </Col>
@@ -226,37 +191,17 @@ const HomePage = () => {
               <Card
                 style={{ 
                   height: '100%',
-                  background: 'rgba(255, 255, 255, 0.15)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '20px',
-                  boxShadow: '0 8px 32px rgba(255, 192, 203, 0.2)'
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  border: 'none',
+                  borderRadius: '12px'
                 }}
-                bodyStyle={{ textAlign: 'center', padding: '40px 24px' }}
+                bodyStyle={{ textAlign: 'center', padding: '32px 24px' }}
               >
-                <div style={{ 
-                  width: '80px', 
-                  height: '80px', 
-                  borderRadius: '40px',
-                  background: 'linear-gradient(135deg, #fd79a8, #e84393)',
-                  margin: '0 auto 24px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 20px rgba(232, 67, 147, 0.4)'
-                }}>
-                  <div style={{ 
-                    width: '40px', 
-                    height: '40px', 
-                    borderRadius: '20px',
-                    background: 'white'
-                  }}></div>
-                </div>
-                <Title level={4} style={{ marginBottom: '16px', color: 'white', fontWeight: '300' }}>
-                  温馨互动
-                </Title>
-                <Paragraph style={{ color: 'rgba(255, 255, 255, 0.8)', margin: 0, lineHeight: '1.6' }}>
-                  文字聊天、实时同步，让心与心的距离更加贴近
+                <MessageOutlined style={{ fontSize: '48px', color: '#1890ff', marginBottom: '16px' }} />
+                <Title level={4} style={{ marginBottom: '12px' }}>实时互动</Title>
+                <Paragraph style={{ color: '#666', margin: 0 }}>
+                  文字聊天、实时同步，让距离不再是问题
                 </Paragraph>
               </Card>
             </Col>
@@ -264,79 +209,40 @@ const HomePage = () => {
               <Card
                 style={{ 
                   height: '100%',
-                  background: 'rgba(255, 255, 255, 0.15)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '20px',
-                  boxShadow: '0 8px 32px rgba(255, 192, 203, 0.2)'
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  border: 'none',
+                  borderRadius: '12px'
                 }}
-                bodyStyle={{ textAlign: 'center', padding: '40px 24px' }}
+                bodyStyle={{ textAlign: 'center', padding: '32px 24px' }}
               >
-                <div style={{ 
-                  width: '80px', 
-                  height: '80px', 
-                  borderRadius: '40px',
-                  background: 'linear-gradient(135deg, #a29bfe, #6c5ce7)',
-                  margin: '0 auto 24px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 20px rgba(108, 92, 231, 0.4)'
-                }}>
-                  <div style={{ 
-                    width: '40px', 
-                    height: '40px', 
-                    borderRadius: '20px',
-                    background: 'white'
-                  }}></div>
-                </div>
-                <Title level={4} style={{ marginBottom: '16px', color: 'white', fontWeight: '300' }}>
-                  私人空间
-                </Title>
-                <Paragraph style={{ color: 'rgba(255, 255, 255, 0.8)', margin: 0, lineHeight: '1.6' }}>
-                  创建专属房间，邀请好友共度美好时光
+                <HomeOutlined style={{ fontSize: '48px', color: '#1890ff', marginBottom: '16px' }} />
+                <Title level={4} style={{ marginBottom: '12px' }}>私人房间</Title>
+                <Paragraph style={{ color: '#666', margin: 0 }}>
+                  创建专属房间，邀请好友一起畅玩
                 </Paragraph>
               </Card>
             </Col>
           </Row>
 
           {/* 操作区域 */}
-          <Row gutter={[32, 32]} justify="center">
+          <Row gutter={[24, 24]} justify="center">
             <Col xs={24} lg={10}>
               <Card
                 style={{ 
-                  background: 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(30px)',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '24px',
-                  boxShadow: '0 12px 40px rgba(255, 192, 203, 0.3)'
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  border: 'none',
+                  borderRadius: '16px',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
                 }}
-                bodyStyle={{ padding: '48px' }}
+                bodyStyle={{ padding: '40px' }}
               >
-                <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-                  <div style={{ 
-                    width: '100px', 
-                    height: '100px', 
-                    borderRadius: '50px',
-                    background: 'linear-gradient(135deg, #ffeaa7, #fdcb6e)',
-                    margin: '0 auto 24px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 8px 30px rgba(253, 203, 110, 0.4)'
-                  }}>
-                    <div style={{ 
-                      width: '50px', 
-                      height: '50px', 
-                      borderRadius: '25px',
-                      background: 'white'
-                    }}></div>
-                  </div>
-                  <Title level={3} style={{ marginBottom: '12px', color: 'white', fontWeight: '300' }}>
-                    创建房间
-                  </Title>
-                  <Paragraph style={{ color: 'rgba(255, 255, 255, 0.9)', margin: 0, lineHeight: '1.6' }}>
-                    开启一个温馨的聚会空间，邀请朋友们一起度过美好时光
+                <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                  <PlusOutlined style={{ fontSize: '48px', color: '#52c41a', marginBottom: '16px' }} />
+                  <Title level={3} style={{ marginBottom: '8px' }}>创建房间</Title>
+                  <Paragraph style={{ color: '#666', margin: 0 }}>
+                    成为房主，邀请朋友加入你的游戏房间
                   </Paragraph>
                 </div>
                 <Button 
@@ -345,13 +251,10 @@ const HomePage = () => {
                   block
                   onClick={handleCreateRoom}
                   style={{ 
-                    height: '52px',
-                    borderRadius: '26px',
+                    height: '48px',
+                    borderRadius: '8px',
                     fontSize: '16px',
-                    fontWeight: '400',
-                    background: 'linear-gradient(135deg, #fd79a8, #e84393)',
-                    border: 'none',
-                    boxShadow: '0 6px 20px rgba(232, 67, 147, 0.4)'
+                    fontWeight: '500'
                   }}
                 >
                   创建房间
@@ -362,51 +265,29 @@ const HomePage = () => {
             <Col xs={24} lg={10}>
               <Card
                 style={{ 
-                  background: 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(30px)',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '24px',
-                  boxShadow: '0 12px 40px rgba(255, 192, 203, 0.3)'
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  border: 'none',
+                  borderRadius: '16px',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
                 }}
-                bodyStyle={{ padding: '48px' }}
+                bodyStyle={{ padding: '40px' }}
               >
-                <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-                  <div style={{ 
-                    width: '100px', 
-                    height: '100px', 
-                    borderRadius: '50px',
-                    background: 'linear-gradient(135deg, #a29bfe, #6c5ce7)',
-                    margin: '0 auto 24px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 8px 30px rgba(108, 92, 231, 0.4)'
-                  }}>
-                    <div style={{ 
-                      width: '50px', 
-                      height: '50px', 
-                      borderRadius: '25px',
-                      background: 'white'
-                    }}></div>
-                  </div>
-                  <Title level={3} style={{ marginBottom: '12px', color: 'white', fontWeight: '300' }}>
-                    加入房间
-                  </Title>
-                  <Paragraph style={{ color: 'rgba(255, 255, 255, 0.9)', margin: 0, lineHeight: '1.6' }}>
-                    输入房间号，加入朋友的温馨聚会
+                <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                  <LoginOutlined style={{ fontSize: '48px', color: '#1890ff', marginBottom: '16px' }} />
+                  <Title level={3} style={{ marginBottom: '8px' }}>加入房间</Title>
+                  <Paragraph style={{ color: '#666', margin: 0 }}>
+                    输入房间号，快速加入朋友的游戏房间
                   </Paragraph>
                 </div>
-                <Space.Compact style={{ width: '100%', marginBottom: '20px' }}>
+                <Space.Compact style={{ width: '100%', marginBottom: '16px' }}>
                   <Input
                     placeholder="输入6位房间号"
                     value={roomIdInput}
                     onChange={handleRoomIdChange}
                     style={{ 
-                      height: '52px',
-                      fontSize: '16px',
-                      borderRadius: '26px 0 0 26px',
-                      border: '1px solid rgba(255, 255, 255, 0.3)',
-                      background: 'rgba(255, 255, 255, 0.15)'
+                      height: '48px',
+                      fontSize: '16px'
                     }}
                     maxLength={6}
                   />
@@ -414,13 +295,9 @@ const HomePage = () => {
                     type="primary" 
                     onClick={handleJoinRoom}
                     style={{ 
-                      height: '52px',
+                      height: '48px',
                       fontSize: '16px',
-                      fontWeight: '400',
-                      borderRadius: '0 26px 26px 0',
-                      background: 'linear-gradient(135deg, #a29bfe, #6c5ce7)',
-                      border: 'none',
-                      boxShadow: '0 6px 20px rgba(108, 92, 231, 0.4)'
+                      fontWeight: '500'
                     }}
                   >
                     加入
@@ -444,20 +321,7 @@ const HomePage = () => {
         }}
         footer={null}
         centered
-        style={{ 
-          borderRadius: '20px'
-        }}
-        modalRender={(modal) => (
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: '20px',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            boxShadow: '0 12px 40px rgba(255, 192, 203, 0.3)'
-          }}>
-            {modal}
-          </div>
-        )}
+        style={{ borderRadius: '12px' }}
       >
         <Form
           form={form}
@@ -466,17 +330,9 @@ const HomePage = () => {
           style={{ marginTop: '16px' }}
         >
           <Form.Item
-            label={
-              <span style={{ 
-                fontSize: '16px', 
-                fontWeight: '300',
-                color: '#333'
-              }}>
-                {actionType === 'join' && roomIdInput ? 
-                  `请输入昵称以加入房间 ${roomIdInput}` : 
-                  "请输入你的昵称"
-                }
-              </span>
+            label={actionType === 'join' && roomIdInput ? 
+              `请输入昵称以加入房间 ${roomIdInput}` : 
+              "请输入你的昵称"
             }
             name="nickname"
             rules={[
@@ -489,12 +345,7 @@ const HomePage = () => {
               placeholder="昵称 (1-20个字符)"
               size="large"
               maxLength={20}
-              style={{ 
-                borderRadius: '12px',
-                height: '48px',
-                fontSize: '16px',
-                background: 'rgba(255, 255, 255, 0.8)'
-              }}
+              style={{ borderRadius: '8px' }}
             />
           </Form.Item>
           <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
@@ -503,14 +354,8 @@ const HomePage = () => {
               htmlType="submit" 
               size="large"
               style={{ 
-                borderRadius: '12px',
-                fontWeight: '400',
-                height: '48px',
-                paddingLeft: '32px',
-                paddingRight: '32px',
-                background: 'linear-gradient(135deg, #fd79a8, #e84393)',
-                border: 'none',
-                boxShadow: '0 6px 20px rgba(232, 67, 147, 0.4)'
+                borderRadius: '8px',
+                fontWeight: '500'
               }}
             >
               确认进入
