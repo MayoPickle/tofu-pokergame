@@ -5,7 +5,7 @@ import socketManager from '../utils/socket';
 
 const { Title, Text } = Typography;
 
-const NumberBombGame = ({ userInfo, isHost }) => {
+const NumberBombGame = ({ userInfo, isHost, isHostMode = false, userList = [] }) => {
   const [gameState, setGameState] = useState({
     status: 'waiting', // waiting, playing, finished
     rangeMin: 1,
@@ -65,7 +65,13 @@ const NumberBombGame = ({ userInfo, isHost }) => {
   };
 
   const makeGuess = (number) => {
-    if (gameState.currentPlayerId === userInfo.userId && gameState.status === 'playing') {
+    const currentPlayer = userList.find(u => u.id === gameState.currentPlayerId);
+    const canGuess = gameState.status === 'playing' && (
+      gameState.currentPlayerId === userInfo.userId || 
+      (isHostMode && isHost && currentPlayer?.isVirtual)
+    );
+    
+    if (canGuess) {
       socketManager.emit('numberBombGuess', { number });
     }
   };
@@ -194,23 +200,45 @@ const NumberBombGame = ({ userInfo, isHost }) => {
           ? '0 0 20px rgba(255, 107, 107, 0.2)' 
           : 'none'
       }}>
-        <Text style={{ 
-          color: 'white', 
-          fontSize: '16px', 
-          fontWeight: '600'
-        }}>
-          {gameState.currentPlayerId === userInfo.userId
-            ? "🎯 轮到你了！请选择数字"
-            : "⏳ 等待其他玩家操作..."
-          }
-        </Text>
+        {(() => {
+          const currentPlayer = userList.find(u => u.id === gameState.currentPlayerId);
+          const isMyTurn = gameState.currentPlayerId === userInfo.userId;
+          const canPlayForVirtual = isHostMode && isHost && currentPlayer?.isVirtual;
+          
+          return (
+            <div>
+              <Text style={{ 
+                color: 'white', 
+                fontSize: '16px', 
+                fontWeight: '600',
+                display: 'block',
+                marginBottom: '8px'
+              }}>
+                {isMyTurn
+                  ? "🎯 轮到你了！请选择数字"
+                  : canPlayForVirtual
+                    ? `🤖 轮到虚拟玩家 ${currentPlayer.nickname}，请代为选择数字`
+                    : `⏳ 等待 ${currentPlayer?.nickname || '其他玩家'} 操作...`
+                }
+              </Text>
+              {currentPlayer && currentPlayer.isVirtual && (
+                <Tag color="blue" style={{ fontSize: '12px' }}>
+                  虚拟玩家
+                </Tag>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       <div style={{ marginBottom: '24px' }}>
         <Row gutter={[8, 8]}>
           {Array.from({ length: gameState.rangeMax - gameState.rangeMin + 1 }, (_, i) => {
             const number = gameState.rangeMin + i;
-            const isDisabled = gameState.currentPlayerId !== userInfo.userId;
+            const currentPlayer = userList.find(u => u.id === gameState.currentPlayerId);
+            const canGuess = gameState.currentPlayerId === userInfo.userId || 
+                           (isHostMode && isHost && currentPlayer?.isVirtual);
+            const isDisabled = !canGuess;
             const isInHistory = gameState.gameHistory.some(h => h.number === number);
             
             return (

@@ -629,7 +629,9 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                             <div style={{
                               background: currentCardData.player.id === userInfo.userId 
                                 ? 'linear-gradient(135deg, #ff6b6b, #ff8e8e)' 
-                                : 'linear-gradient(135deg, #48dbfb, #6bb6ff)',
+                                : currentCardData.player.isVirtual
+                                  ? 'linear-gradient(135deg, #9c88ff, #b19cd9)'
+                                  : 'linear-gradient(135deg, #48dbfb, #6bb6ff)',
                               color: 'white',
                               padding: '12px 20px',
                               borderRadius: '16px',
@@ -637,7 +639,9 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                               fontSize: '18px',
                               boxShadow: currentCardData.player.id === userInfo.userId 
                                 ? '0 4px 15px rgba(255, 107, 107, 0.4)' 
-                                : '0 4px 15px rgba(72, 219, 251, 0.4)',
+                                : currentCardData.player.isVirtual
+                                  ? '0 4px 15px rgba(156, 136, 255, 0.4)'
+                                  : '0 4px 15px rgba(72, 219, 251, 0.4)',
                               border: '2px solid rgba(255, 255, 255, 0.3)',
                               textShadow: '0 1px 2px rgba(0,0,0,0.2)',
                               display: 'flex',
@@ -645,7 +649,11 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                               gap: '8px'
                             }}>
                               <span style={{ fontSize: '20px' }}>
-                                {currentCardData.player.id === userInfo.userId ? "🎯" : "👤"}
+                                {currentCardData.player.id === userInfo.userId 
+                                  ? "🎯" 
+                                  : currentCardData.player.isVirtual 
+                                    ? "🤖" 
+                                    : "👤"}
                               </span>
                               {currentCardData.player.nickname}
                               {currentCardData.player.id === userInfo.userId && (
@@ -653,6 +661,14 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                                   fontSize: '16px', 
                                   filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.8))' 
                                 }}>👑</span>
+                              )}
+                              {currentCardData.player.isVirtual && (
+                                <span style={{ 
+                                  fontSize: '12px', 
+                                  background: 'rgba(255,255,255,0.2)',
+                                  padding: '2px 6px',
+                                  borderRadius: '8px'
+                                }}>虚拟</span>
                               )}
                             </div>
                           </div>

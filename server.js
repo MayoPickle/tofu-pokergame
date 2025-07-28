@@ -34,13 +34,15 @@ const rooms = new Map();
 const users = new Map();
 
 class Room {
-    constructor(id, hostId) {
+    constructor(id, hostId, hostMode = false) {
         this.id = id;
         this.hostId = hostId;
         this.users = new Map();
         this.game = null;
         this.gameState = 'waiting'; // waiting, playing, finished
         this.created = new Date();
+        this.hostMode = hostMode; // 主持人模式
+        this.virtualPlayers = new Map(); // 主持人模式下的虚拟参与者
     }
 
     addUser(user) {
@@ -59,9 +61,47 @@ class Room {
         return null;
     }
 
+    addVirtualPlayer(nickname) {
+        if (!this.hostMode) {
+            return { success: false, error: '只有主持人模式才能添加虚拟参与者' };
+        }
+        
+        const playerId = `virtual_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+        const existingNumbers = new Set([
+            ...Array.from(this.users.values()).map(u => u.number || 0),
+            ...Array.from(this.virtualPlayers.values()).map(vp => vp.number)
+        ]);
+        
+        // 找到下一个可用的号码
+        let nextNumber = 2; // 房主是1号
+        while (existingNumbers.has(nextNumber)) {
+            nextNumber++;
+        }
+        
+        this.virtualPlayers.set(playerId, {
+            id: playerId,
+            nickname: nickname.trim(),
+            number: nextNumber,
+            isVirtual: true
+        });
+        
+        return { success: true, playerId };
+    }
+    
+    removeVirtualPlayer(playerId) {
+        if (!this.hostMode) {
+            return { success: false, error: '只有主持人模式才能移除虚拟参与者' };
+        }
+        
+        const removed = this.virtualPlayers.delete(playerId);
+        return { success: removed };
+    }
+
     getUserList() {
         // 重新分配连续的号码牌
         const userList = Array.from(this.users.values());
+        const virtualList = Array.from(this.virtualPlayers.values());
+        
         // 房主始终是1号
         const host = userList.find(user => user.id === this.hostId);
         const others = userList.filter(user => user.id !== this.hostId);
@@ -72,18 +112,36 @@ class Room {
                 id: host.id,
                 nickname: host.nickname,
                 number: 1,
-                isHost: true
+                isHost: true,
+                isVirtual: false
             });
         }
         
+        // 添加真实用户（除房主外）
         others.forEach((user, index) => {
             result.push({
                 id: user.id,
                 nickname: user.nickname,
                 number: index + 2, // 从2开始
-                isHost: false
+                isHost: false,
+                isVirtual: false
             });
         });
+        
+        // 如果是主持人模式，添加虚拟参与者
+        if (this.hostMode) {
+            // 重新分配虚拟参与者的号码，确保连续
+            let nextNumber = result.length + 1;
+            virtualList.forEach((virtualPlayer) => {
+                result.push({
+                    id: virtualPlayer.id,
+                    nickname: virtualPlayer.nickname,
+                    number: nextNumber++,
+                    isHost: false,
+                    isVirtual: true
+                });
+            });
+        }
         
         return result;
     }
@@ -114,7 +172,7 @@ class NumberBombGame {
     }
 
     start() {
-        const users = Array.from(this.room.users.values());
+        const users = this.room.getUserList();
         if (users.length < 2) {
             return { success: false, error: '至少需要2个玩家' };
         }
@@ -140,7 +198,7 @@ class NumberBombGame {
             // 猜中炸弹，游戏结束
             this.isFinished = true;
             this.loser = this.currentPlayer;
-            const users = Array.from(this.room.users.values());
+            const users = this.room.getUserList();
             this.winner = users.find(u => u.id !== userId);
             return {
                 success: true,
@@ -157,8 +215,8 @@ class NumberBombGame {
                 this.currentRange.max = number - 1;
             }
 
-            // 切换到下一个玩家
-            const users = Array.from(this.room.users.values());
+            // 切换到下一个玩家（包括虚拟玩家）
+            const users = this.room.getUserList();
             const currentIndex = users.findIndex(u => u.id === userId);
             const nextIndex = (currentIndex + 1) % users.length;
             this.currentPlayer = users[nextIndex];
@@ -205,7 +263,7 @@ class TianjiuPokerGame {
     }
 
     start() {
-        const users = Array.from(this.room.users.values());
+        const users = this.room.getUserList();
         if (users.length < 2) {
             return { success: false, error: '至少需要2个玩家' };
         }
@@ -214,7 +272,7 @@ class TianjiuPokerGame {
     }
 
     drawCard(hostId) {
-        const users = Array.from(this.room.users.values());
+        const users = this.room.getUserList();
         if (users.length < 2) {
             return { success: false, error: '至少需要2个玩家' };
         }
@@ -223,7 +281,7 @@ class TianjiuPokerGame {
         const randomCardIndex = Math.floor(Math.random() * this.cards.length);
         this.currentCard = this.cards[randomCardIndex];
         
-        // 随机选择一个玩家（包括房主在内的所有玩家）
+        // 随机选择一个玩家（包括房主和虚拟玩家在内的所有玩家）
         const randomPlayerIndex = Math.floor(Math.random() * users.length);
         this.currentPlayer = users[randomPlayerIndex];
         
@@ -238,7 +296,8 @@ class TianjiuPokerGame {
             card: this.currentCard,
             player: {
                 id: this.currentPlayer.id,
-                nickname: this.currentPlayer.nickname
+                nickname: this.currentPlayer.nickname,
+                isVirtual: this.currentPlayer.isVirtual || false
             },
             effect: this.cardEffects[this.currentCard]
         };
@@ -342,7 +401,7 @@ io.on('connection', (socket) => {
         const roomId = Math.random().toString(36).substr(2, 6).toUpperCase();
         const userId = uuidv4();
         const user = new User(userId, data.nickname, socket.id);
-        const room = new Room(roomId, userId);
+        const room = new Room(roomId, userId, data.hostMode || false);
         
         user.number = 1;
         room.addUser(user);
@@ -350,7 +409,7 @@ io.on('connection', (socket) => {
         rooms.set(roomId, room);
         users.set(userId, user);
         
-        console.log(`🏠 房间创建成功: ${roomId}, 用户: ${data.nickname} (${userId})`);
+        console.log(`🏠 房间创建成功: ${roomId}, 用户: ${data.nickname} (${userId}), 主持人模式: ${room.hostMode}`);
         console.log(`📊 当前房间数: ${rooms.size}, 用户数: ${users.size}`);
         
         socket.join(roomId);
@@ -358,7 +417,8 @@ io.on('connection', (socket) => {
             roomId,
             userId,
             userNumber: user.number,
-            isHost: true
+            isHost: true,
+            hostMode: room.hostMode
         });
         
         socket.emit('userListUpdate', room.getUserList());
@@ -421,7 +481,8 @@ io.on('connection', (socket) => {
                 roomId: data.roomId,
                 userId: data.userId,
                 userNumber: existingUser.number,
-                isHost: existingUser.id === room.hostId
+                isHost: existingUser.id === room.hostId,
+                hostMode: room.hostMode
             });
             
             // 发送当前房间状态
@@ -785,6 +846,78 @@ io.on('connection', (socket) => {
             });
         } else {
             socket.emit('error', result.error);
+        }
+    });
+
+    // 添加虚拟参与者（仅主持人模式）
+    socket.on('addVirtualPlayer', (data) => {
+        // 通过 socket.id 查找当前用户
+        let currentUser = null;
+        for (const [userId, user] of users.entries()) {
+            if (user.socketId === socket.id) {
+                currentUser = user;
+                break;
+            }
+        }
+        
+        if (!currentUser || !currentUser.roomId) {
+            socket.emit('error', '用户状态无效');
+            return;
+        }
+        
+        const room = rooms.get(currentUser.roomId);
+        if (!room || room.hostId !== currentUser.id) {
+            socket.emit('error', '只有房主可以添加虚拟参与者');
+            return;
+        }
+
+        if (!room.hostMode) {
+            socket.emit('error', '只有主持人模式才能添加虚拟参与者');
+            return;
+        }
+
+        const result = room.addVirtualPlayer(data.nickname);
+        if (result.success) {
+            io.to(currentUser.roomId).emit('userListUpdate', room.getUserList());
+            socket.emit('virtualPlayerAdded', { playerId: result.playerId });
+        } else {
+            socket.emit('error', result.error);
+        }
+    });
+
+    // 移除虚拟参与者（仅主持人模式）
+    socket.on('removeVirtualPlayer', (data) => {
+        // 通过 socket.id 查找当前用户
+        let currentUser = null;
+        for (const [userId, user] of users.entries()) {
+            if (user.socketId === socket.id) {
+                currentUser = user;
+                break;
+            }
+        }
+        
+        if (!currentUser || !currentUser.roomId) {
+            socket.emit('error', '用户状态无效');
+            return;
+        }
+        
+        const room = rooms.get(currentUser.roomId);
+        if (!room || room.hostId !== currentUser.id) {
+            socket.emit('error', '只有房主可以移除虚拟参与者');
+            return;
+        }
+
+        if (!room.hostMode) {
+            socket.emit('error', '只有主持人模式才能移除虚拟参与者');
+            return;
+        }
+
+        const result = room.removeVirtualPlayer(data.playerId);
+        if (result.success) {
+            io.to(currentUser.roomId).emit('userListUpdate', room.getUserList());
+            socket.emit('virtualPlayerRemoved', { playerId: data.playerId });
+        } else {
+            socket.emit('error', '移除虚拟参与者失败');
         }
     });
 

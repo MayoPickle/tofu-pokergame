@@ -24,6 +24,7 @@ import NumberBombGame from '../components/NumberBombGame';
 import TianjiuPokerGame from '../components/TianjiuPokerGame';
 import UserList from '../components/UserList';
 import ChatPanel from '../components/ChatPanel';
+import HostPlayerManager from '../components/HostPlayerManager';
 
 const { Header, Content, Sider } = Layout;
 const { Title } = Typography;
@@ -34,6 +35,7 @@ const RoomPage = () => {
   const [loading, setLoading] = useState(true);
   const [bubbles, setBubbles] = useState([]);
   const [gameType, setGameType] = useState(null);
+  const [isHostMode, setIsHostMode] = useState(false);
 
   // 生成泡泡数据
   useEffect(() => {
@@ -59,6 +61,7 @@ const RoomPage = () => {
     }
 
     setUserInfo(storedUserInfo);
+    setIsHostMode(storedUserInfo.hostMode || false);
     
     // 连接到服务器
     socketManager.connect();
@@ -77,9 +80,11 @@ const RoomPage = () => {
         ...storedUserInfo,
         userId: data.userId,
         userNumber: data.userNumber,
-        isHost: data.isHost
+        isHost: data.isHost,
+        hostMode: data.hostMode
       };
       setUserInfo(updatedUserInfo);
+      setIsHostMode(data.hostMode || false);
       storage.setUserInfo(updatedUserInfo);
     });
 
@@ -471,7 +476,9 @@ const RoomPage = () => {
                   ) : gameType === GAME_TYPES.NUMBER_BOMB ? (
                     <NumberBombGame 
                       userInfo={userInfo} 
-                      isHost={userInfo.isHost} 
+                      isHost={userInfo.isHost}
+                      isHostMode={isHostMode}
+                      userList={users}
                     />
                   ) : gameType === GAME_TYPES.TIANJIU_POKER ? (
                     <TianjiuPokerGame 
@@ -502,6 +509,14 @@ const RoomPage = () => {
               
               <Col xs={24} lg={8}>
                 <Space direction="vertical" style={{ width: '100%' }} size="large">
+                  {/* 主持人模式下显示参与者管理面板 */}
+                  {isHostMode && userInfo.isHost && (
+                    <HostPlayerManager 
+                      userList={users}
+                      isHost={userInfo.isHost}
+                    />
+                  )}
+                  
                   <div style={{
                     background: 'rgba(255, 255, 255, 0.08)',
                     backdropFilter: 'blur(20px)',
@@ -517,19 +532,22 @@ const RoomPage = () => {
                     />
                   </div>
                   
-                  <div style={{
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '20px',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                    padding: '20px',
-                    minHeight: '300px'
-                  }}>
-                    <ChatPanel 
-                      userInfo={userInfo} 
-                    />
-                  </div>
+                  {/* 普通模式或主持人模式都显示聊天面板 */}
+                  {!isHostMode && (
+                    <div style={{
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      backdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      borderRadius: '20px',
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                      padding: '20px',
+                      minHeight: '300px'
+                    }}>
+                      <ChatPanel 
+                        userInfo={userInfo} 
+                      />
+                    </div>
+                  )}
                 </Space>
               </Col>
             </Row>
