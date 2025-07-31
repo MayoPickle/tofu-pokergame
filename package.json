@@ -10,7 +10,10 @@
     "dev:client": "webpack --mode development --watch",
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
-    "watch": "webpack --mode development --watch"
+    "watch": "webpack --mode development --watch",
+    "clear-cache": "node scripts/clear-cache.js",
+    "clean": "npm run clear-cache && npm run build",
+    "dev:clean": "npm run clear-cache && npm run dev"
   },
   "keywords": [
     "social",

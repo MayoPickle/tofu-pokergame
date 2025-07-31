@@ -9,8 +9,28 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 // 静态文件服务 - 优先提供构建后的文件
-app.use('/dist', express.static(path.join(__dirname, 'public/dist')));
-app.use(express.static('public'));
+app.use('/dist', express.static(path.join(__dirname, 'public/dist'), {
+  setHeaders: (res, path) => {
+    // 对于JS和CSS文件，设置较长的缓存时间（因为文件名包含哈希值）
+    if (path.endsWith('.js') || path.endsWith('.css')) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1年
+    } else {
+      // 对于其他文件，设置较短的缓存时间
+      res.setHeader('Cache-Control', 'public, max-age=3600'); // 1小时
+    }
+  }
+}));
+
+// 为HTML文件设置无缓存
+app.use(express.static('public', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  }
+}));
 
 // 路由
 app.get('/', (req, res) => {

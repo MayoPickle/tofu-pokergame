@@ -83,7 +83,7 @@ const animationStyles = `
     100% { transform: translateY(0px); }
   }
   
-  @keyframes shimmer {
+  @keyframes shimmerEffect {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(200%); }
   }
@@ -117,7 +117,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
 
     // 监听抽牌结果
     socketManager.on('tianjiuCardDrawn', (data) => {
-      console.log('🎭 收到抽牌结果:', data);
+      console.log('收到抽牌结果:', data);
       
       // 先设置卡牌数据
       setCurrentCardData(data);
@@ -135,7 +135,6 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
         }, 200);
       }, 500);
     });
-
 
     // 监听回合结束
     socketManager.on('tianjiuRoundFinished', (data) => {
@@ -175,7 +174,6 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
     }, 2500);
   };
 
-
   const finishRound = () => {
     socketManager.emit('finishTianjiuRound');
   };
@@ -188,11 +186,10 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
     const imagePath = `/pic/tianjiu_poker/${cardFileName}.png`;
     
     // 调试日志
-    console.log(`🎴 获取卡牌图片: ${card} -> ${imagePath}`);
+    console.log(`获取卡牌图片: ${card} -> ${imagePath}`);
     
     return imagePath;
   };
-
 
   const renderWaitingArea = () => (
     <div style={{ textAlign: 'center', padding: '80px 30px' }}>
@@ -212,7 +209,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
         fontSize: '48px',
         fontWeight: 'bold'
       }}>
-        🍷 甜酒牌游戏
+        甜酒牌游戏
       </Title>
       <Text style={{ 
         color: 'rgba(255, 255, 255, 0.8)', 
@@ -221,7 +218,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
         marginBottom: '50px',
         lineHeight: '1.6'
       }}>
-        {isHost ? '🎭 准备好开启命运之旅了吗？' : '⏳ 等待房主开始甜酒牌游戏...'}
+        {isHost ? '准备好开启命运之旅了吗？' : '等待房主开始甜酒牌游戏...'}
       </Text>
       {isHost && (
         <Button 
@@ -251,7 +248,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
             e.target.style.boxShadow = '0 12px 30px rgba(255, 107, 107, 0.4)';
           }}
         >
-          🚀 开始甜酒牌游戏
+          开始甜酒牌游戏
         </Button>
       )}
     </div>
@@ -271,7 +268,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
               WebkitTextFillColor: 'transparent',
               fontWeight: 'bold'
             }}>
-              🍷 甜酒牌游戏
+              甜酒牌游戏
             </Title>
           </div>
         </Col>
@@ -294,7 +291,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                 fontSize: '32px',
                 fontWeight: 'bold'
               }}>
-                🎭 准备抽牌...
+                准备抽牌...
               </Title>
               <div style={{ 
                 color: 'rgba(255, 255, 255, 0.8)', 
@@ -302,11 +299,11 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                 fontSize: '18px',
                 lineHeight: '1.8'
               }}>
-                📋 参与玩家: <span style={{ fontWeight: 'bold', color: '#feca57' }}>
+                参与玩家: <span style={{ fontWeight: 'bold', color: '#feca57' }}>
                   {userList.map(u => u.nickname).join('、')}
                 </span>
                 <br />
-                🎯 所有人都有相同机会被抽中（包括房主）
+                所有人都有相同机会被抽中（包括房主）
               </div>
               <Button 
                 type="primary" 
@@ -334,7 +331,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                   e.target.style.boxShadow = '0 8px 25px rgba(255, 107, 107, 0.4)';
                 }}
               >
-                🎰 开始抽牌
+                开始抽牌
               </Button>
             </Card>
           </Col>
@@ -368,7 +365,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                   }}>
                     {/* 多张卡片洗牌效果 */}
                     {[...Array(8)].map((_, index) => {
-                      const cards = ['🎭', '🃏', '🎪', '🎨', '🎯', '🎲', '🎊', '🎉'];
+                      const cards = ['♠', '♥', '♦', '♣', 'A', 'K', 'Q', 'J'];
                       const colors = [
                         'linear-gradient(45deg, #667eea, #764ba2)',
                         'linear-gradient(45deg, #f093fb, #f5576c)',
@@ -425,7 +422,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                       textShadow: '0 0 10px rgba(0,0,0,0.5)',
                       zIndex: 15
                     }}>
-                      🎰
+                      ♠
                     </div>
                   </div>
                   
@@ -436,14 +433,14 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                     fontWeight: 'bold',
                     animation: `shimmer 2s ease-in-out infinite`
                   }}>
-                    🎲 正在洗牌中...
+                    正在洗牌中...
                   </Title>
                   <div style={{ 
                     color: 'rgba(255, 255, 255, 0.9)', 
                     fontSize: '20px',
                     fontWeight: '500'
                   }}>
-                    🎪 命运卡牌正在重新洗混...
+                    命运卡牌正在重新洗混...
                   </div>
                 </>
               ) : (
@@ -459,14 +456,14 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                     fontWeight: 'bold',
                     animation: `shimmer 2s ease-in-out infinite`
                   }}>
-                    🎰 正在抽牌中...
+                    正在抽牌中...
                   </Title>
                   <div style={{ 
                     color: 'rgba(255, 255, 255, 0.9)', 
                     fontSize: '20px',
                     fontWeight: '500'
                   }}>
-                    ✨ 命运之手正在选择幸运儿...
+                    命运之手正在选择幸运儿...
                   </div>
                 </>
               )}
@@ -474,7 +471,7 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
           </Col>
         )}
 
-        {/* 显示当前抽到的牌 */}
+        {/* 显示当前抽到的牌 - 重新设计的大卡牌布局 */}
         {currentCardData && (
           <Col span={24}>
             <Card 
@@ -485,7 +482,8 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                 border: showCardReveal 
                   ? '2px solid #ffd700' 
                   : '1px solid rgba(255, 255, 255, 0.2)',
-                padding: '20px',
+                padding: '40px',
+                borderRadius: '24px',
                 boxShadow: showCardReveal 
                   ? '0 0 40px rgba(255, 215, 0, 0.6)' 
                   : 'none',
@@ -493,304 +491,288 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
                 transition: 'all 0.8s ease-in-out'
               }}
             >
-              <Row gutter={16} align="middle">
-                <Col span={8}>
-                  <div style={{ 
-                    textAlign: 'center',
-                    perspective: '1000px'
+              {/* 卡牌居中显示布局 */}
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center',
+                gap: '40px'
+              }}>
+                {/* 大卡牌显示区 */}
+                <div style={{ 
+                  textAlign: 'center',
+                  perspective: '1000px'
+                }}>
+                  <div style={{
+                    width: '400px',
+                    height: '560px',
+                    margin: '0 auto',
+                    position: 'relative',
+                    transformStyle: 'preserve-3d',
+                    animation: showCardReveal ? 'cardFlip 2s ease-in-out' : 'none',
+                    transform: showCardReveal ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                    transition: showCardReveal ? 'none' : 'transform 0.3s ease'
                   }}>
+                    {/* 卡牌背面 */}
                     <div style={{
-                      width: '180px',
-                      height: '252px',
-                      margin: '0 auto',
-                      position: 'relative',
-                      transformStyle: 'preserve-3d',
-                      animation: showCardReveal ? 'cardFlip 2s ease-in-out' : 'none',
-                      transform: showCardReveal ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                      transition: showCardReveal ? 'none' : 'transform 0.3s ease'
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      background: 'linear-gradient(45deg, #667eea, #764ba2)',
+                      borderRadius: '20px',
+                      border: '5px solid #feca57',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontSize: '80px',
+                      fontWeight: 'bold',
+                      boxShadow: '0 16px 40px rgba(0,0,0,0.3)'
                     }}>
-                      {/* 卡牌背面 */}
+                      ♠
+                    </div>
+                    
+                    {/* 卡牌正面 */}
+                    <div style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                    }}>
+                      <img 
+                        src={getCardImage(currentCardData.card)}
+                        alt={currentCardData.card}
+                        style={{ 
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '20px',
+                          border: '6px solid #ffd700',
+                          objectFit: 'cover',
+                          filter: 'drop-shadow(0 0 30px rgba(255, 215, 0, 0.8))',
+                          boxShadow: '0 20px 50px rgba(255, 215, 0, 0.5)'
+                        }}
+                        onError={(e) => {
+                          console.error(`卡牌图片加载失败: ${currentCardData.card}`);
+                          // 如果图片加载失败，显示卡牌名称
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      {/* 图片加载失败时的备用显示 */}
                       <div style={{
-                        position: 'absolute',
                         width: '100%',
                         height: '100%',
-                        backfaceVisibility: 'hidden',
+                        borderRadius: '20px',
+                        border: '6px solid #ffd700',
                         background: 'linear-gradient(45deg, #667eea, #764ba2)',
-                        borderRadius: '8px',
-                        border: '2px solid #feca57',
-                        display: 'flex',
+                        display: 'none',
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: 'white',
                         fontSize: '36px',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        boxShadow: '0 20px 50px rgba(255, 215, 0, 0.5)'
                       }}>
-                        🎭
+                        {currentCardData.card}
                       </div>
-                      
-                      {/* 卡牌正面 */}
-                      <div style={{
-                        position: 'absolute',
-                        width: '100%',
-                        height: '100%',
-                        backfaceVisibility: 'hidden',
-                        transform: 'rotateY(180deg)',
+                    </div>
+                  </div>
+                </div>
+                
+                {/* 信息显示区 */}
+                <div style={{ 
+                  width: '100%', 
+                  maxWidth: '900px'
+                }}>
+                  {/* 玩家和卡牌信息 */}
+                  <div style={{ 
+                    animation: showCardReveal ? 'fadeInSlide 1s ease-out 0.8s both' : 'none',
+                    marginBottom: '32px'
+                  }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 107, 0.15))',
+                      backdropFilter: 'blur(10px)',
+                      border: '2px solid rgba(255, 215, 0, 0.3)',
+                      borderRadius: '24px',
+                      padding: '24px 32px',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        gap: '24px',
+                        flexWrap: 'wrap'
                       }}>
-                        <img 
-                          src={getCardImage(currentCardData.card)}
-                          alt={currentCardData.card}
-                          style={{ 
-                            width: '100%',
-                            height: '100%',
-                            borderRadius: '8px',
-                            border: '3px solid #ffd700',
-                            objectFit: 'cover',
-                            filter: 'drop-shadow(0 0 10px rgba(255, 215, 0, 0.8))'
-                          }}
-                          onError={(e) => {
-                            console.error(`❌ 卡牌图片加载失败: ${currentCardData.card}`);
-                            // 如果图片加载失败，显示卡牌名称
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
-                          }}
-                        />
-                        {/* 图片加载失败时的备用显示 */}
                         <div style={{
-                          width: '100%',
-                          height: '100%',
-                          borderRadius: '8px',
-                          border: '3px solid #ffd700',
-                          background: 'linear-gradient(45deg, #667eea, #764ba2)',
-                          display: 'none',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'white',
-                          fontSize: '24px',
+                          background: 'linear-gradient(135deg, #ffd700, #ffed4e)',
+                          color: '#8B4513',
+                          padding: '16px 24px',
+                          borderRadius: '20px',
                           fontWeight: 'bold',
-                          textAlign: 'center'
+                          fontSize: '24px',
+                          boxShadow: '0 6px 20px rgba(255, 215, 0, 0.4)',
+                          border: '2px solid rgba(255, 255, 255, 0.3)',
+                          textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                          letterSpacing: '0.5px'
                         }}>
                           {currentCardData.card}
                         </div>
+                        
+                        <div style={{
+                          background: currentCardData.player.id === userInfo.userId 
+                            ? 'linear-gradient(135deg, #ff6b6b, #ff8e8e)' 
+                            : currentCardData.player.isVirtual
+                              ? 'linear-gradient(135deg, #9c88ff, #b19cd9)'
+                              : 'linear-gradient(135deg, #48dbfb, #6bb6ff)',
+                          color: 'white',
+                          padding: '16px 24px',
+                          borderRadius: '20px',
+                          fontWeight: 'bold',
+                          fontSize: '20px',
+                          boxShadow: currentCardData.player.id === userInfo.userId 
+                            ? '0 6px 20px rgba(255, 107, 107, 0.4)' 
+                            : currentCardData.player.isVirtual
+                              ? '0 6px 20px rgba(156, 136, 255, 0.4)'
+                              : '0 6px 20px rgba(72, 219, 251, 0.4)',
+                          border: '2px solid rgba(255, 255, 255, 0.3)',
+                          textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px'
+                        }}>
+                          <span style={{ fontSize: '24px' }}>
+                            {currentCardData.player.id === userInfo.userId 
+                              ? "●" 
+                              : currentCardData.player.isVirtual 
+                                ? "○" 
+                                : "◆"}
+                          </span>
+                          {currentCardData.player.nickname}
+                          {currentCardData.player.id === userInfo.userId && (
+                            <span style={{ 
+                              fontSize: '20px', 
+                              filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.8))' 
+                            }}>★</span>
+                          )}
+                          {currentCardData.player.isVirtual && (
+                            <span style={{ 
+                              fontSize: '14px', 
+                              background: 'rgba(255,255,255,0.2)',
+                              padding: '4px 8px',
+                              borderRadius: '10px'
+                            }}>虚拟</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </Col>
-                <Col span={16}>
-                  <div style={{ width: '100%', padding: '8px' }}>
-                    {/* 现代化标题区域 */}
-                    <div style={{ 
-                      animation: showCardReveal ? 'fadeInSlide 1s ease-out 0.8s both' : 'none',
-                      marginBottom: '24px'
+                  
+                  {/* 卡牌效果说明 */}
+                  <div style={{ 
+                    animation: showCardReveal ? 'fadeInSlide 1s ease-out 1.2s both' : 'none',
+                    marginBottom: '40px'
+                  }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(45, 45, 45, 0.8))',
+                      backdropFilter: 'blur(15px)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '24px',
+                      padding: '32px 36px',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.3)'
                     }}>
                       <div style={{
-                        background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 107, 0.15))',
-                        backdropFilter: 'blur(10px)',
-                        border: '2px solid rgba(255, 215, 0, 0.3)',
-                        borderRadius: '20px',
-                        padding: '20px 24px',
-                        position: 'relative',
-                        overflow: 'hidden'
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '20px'
                       }}>
-                        {/* 背景装饰 */}
                         <div style={{
-                          position: 'absolute',
-                          top: '-50%',
-                          right: '-20%',
-                          width: '80px',
-                          height: '80px',
-                          background: 'linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 107, 0.1))',
-                          borderRadius: '50%',
-                          filter: 'blur(20px)',
-                          zIndex: 0
-                        }} />
+                          fontSize: '36px',
+                          filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.6))',
+                          flexShrink: 0
+                        }}>♦</div>
                         
-                        <div style={{ position: 'relative', zIndex: 1 }}>
-                          <div style={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            gap: '16px',
-                            marginBottom: '16px' 
+                        <div style={{ flex: 1 }}>
+                          <div style={{
+                            color: 'rgba(255, 215, 0, 0.9)',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px',
+                            marginBottom: '12px',
+                            opacity: 0.8
+                          }}>卡牌效果</div>
+                          
+                          <div style={{
+                            color: 'white',
+                            fontSize: '22px',
+                            lineHeight: '1.6',
+                            fontWeight: '500',
+                            textShadow: '0 1px 2px rgba(0,0,0,0.5)'
                           }}>
-                            <div style={{
-                              background: 'linear-gradient(135deg, #ffd700, #ffed4e)',
-                              color: '#8B4513',
-                              padding: '12px 20px',
-                              borderRadius: '16px',
-                              fontWeight: 'bold',
-                              fontSize: '20px',
-                              boxShadow: '0 4px 15px rgba(255, 215, 0, 0.4)',
-                              border: '2px solid rgba(255, 255, 255, 0.3)',
-                              textShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                              letterSpacing: '0.5px'
-                            }}>
-                              🎴 {currentCardData.card}
-                            </div>
-                            
-                            <div style={{
-                              background: currentCardData.player.id === userInfo.userId 
-                                ? 'linear-gradient(135deg, #ff6b6b, #ff8e8e)' 
-                                : currentCardData.player.isVirtual
-                                  ? 'linear-gradient(135deg, #9c88ff, #b19cd9)'
-                                  : 'linear-gradient(135deg, #48dbfb, #6bb6ff)',
-                              color: 'white',
-                              padding: '12px 20px',
-                              borderRadius: '16px',
-                              fontWeight: 'bold',
-                              fontSize: '18px',
-                              boxShadow: currentCardData.player.id === userInfo.userId 
-                                ? '0 4px 15px rgba(255, 107, 107, 0.4)' 
-                                : currentCardData.player.isVirtual
-                                  ? '0 4px 15px rgba(156, 136, 255, 0.4)'
-                                  : '0 4px 15px rgba(72, 219, 251, 0.4)',
-                              border: '2px solid rgba(255, 255, 255, 0.3)',
-                              textShadow: '0 1px 2px rgba(0,0,0,0.2)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '8px'
-                            }}>
-                              <span style={{ fontSize: '20px' }}>
-                                {currentCardData.player.id === userInfo.userId 
-                                  ? "🎯" 
-                                  : currentCardData.player.isVirtual 
-                                    ? "🤖" 
-                                    : "👤"}
-                              </span>
-                              {currentCardData.player.nickname}
-                              {currentCardData.player.id === userInfo.userId && (
-                                <span style={{ 
-                                  fontSize: '16px', 
-                                  filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.8))' 
-                                }}>👑</span>
-                              )}
-                              {currentCardData.player.isVirtual && (
-                                <span style={{ 
-                                  fontSize: '12px', 
-                                  background: 'rgba(255,255,255,0.2)',
-                                  padding: '2px 6px',
-                                  borderRadius: '8px'
-                                }}>虚拟</span>
-                              )}
-                            </div>
+                            {currentCardData.effect}
                           </div>
                         </div>
                       </div>
                     </div>
-                    
-                    {/* 现代化卡牌效果说明 */}
+                  </div>
+                  
+                  {/* 控制按钮 */}
+                  {isHost && (
                     <div style={{ 
-                      animation: showCardReveal ? 'fadeInSlide 1s ease-out 1.2s both' : 'none',
-                      marginBottom: '32px'
+                      textAlign: 'center',
+                      animation: showCardReveal ? 'fadeInSlide 1s ease-out 1.6s both' : 'none'
                     }}>
-                      <div style={{
-                        background: 'linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(45, 45, 45, 0.8))',
-                        backdropFilter: 'blur(15px)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: '20px',
-                        padding: '24px 28px',
-                        position: 'relative',
-                        overflow: 'hidden',
-                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-                      }}>
-                        {/* 装饰性光效 */}
+                      <Button 
+                        type="primary"
+                        onClick={finishRound}
+                        style={{ 
+                          background: 'linear-gradient(135deg, #ff6b6b, #feca57)',
+                          border: 'none',
+                          borderRadius: '24px',
+                          padding: '20px 40px',
+                          fontWeight: 'bold',
+                          fontSize: '20px',
+                          height: '70px',
+                          minWidth: '240px',
+                          boxShadow: '0 12px 32px rgba(255, 107, 107, 0.4)',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          transition: 'all 0.3s ease',
+                          textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.transform = 'translateY(-3px) scale(1.02)';
+                          e.target.style.boxShadow = '0 16px 40px rgba(255, 107, 107, 0.6)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.transform = 'translateY(0) scale(1)';
+                          e.target.style.boxShadow = '0 12px 32px rgba(255, 107, 107, 0.4)';
+                        }}
+                      >
+                        <span style={{ position: 'relative', zIndex: 1 }}>继续抽牌</span>
+                        {/* 按钮光效 */}
                         <div style={{
                           position: 'absolute',
                           top: 0,
-                          left: 0,
-                          right: 0,
-                          height: '2px',
-                          background: 'linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.8), transparent)',
+                          left: '-100%',
+                          width: '100%',
+                          height: '100%',
+                          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                          animation: 'shimmerEffect 3s infinite',
                           zIndex: 0
                         }} />
-                        
-                        <div style={{ position: 'relative', zIndex: 1 }}>
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            gap: '16px'
-                          }}>
-                            <div style={{
-                              fontSize: '28px',
-                              filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.6))',
-                              flexShrink: 0
-                            }}>🎭</div>
-                            
-                            <div style={{ flex: 1 }}>
-                              <div style={{
-                                color: 'rgba(255, 215, 0, 0.9)',
-                                fontSize: '14px',
-                                fontWeight: '600',
-                                textTransform: 'uppercase',
-                                letterSpacing: '1px',
-                                marginBottom: '8px',
-                                opacity: 0.8
-                              }}>卡牌效果</div>
-                              
-                              <div style={{
-                                color: 'white',
-                                fontSize: '18px',
-                                lineHeight: '1.6',
-                                fontWeight: '500',
-                                textShadow: '0 1px 2px rgba(0,0,0,0.5)'
-                              }}>
-                                {currentCardData.effect}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      </Button>
                     </div>
-                    
-                    {/* 现代化控制按钮 */}
-                    {isHost && (
-                      <div style={{ 
-                        textAlign: 'center',
-                        animation: showCardReveal ? 'fadeInSlide 1s ease-out 1.6s both' : 'none'
-                      }}>
-                        <Button 
-                          type="primary"
-                          onClick={finishRound}
-                          style={{ 
-                            background: 'linear-gradient(135deg, #ff6b6b, #feca57)',
-                            border: 'none',
-                            borderRadius: '20px',
-                            padding: '16px 32px',
-                            fontWeight: 'bold',
-                            fontSize: '18px',
-                            height: '60px',
-                            minWidth: '200px',
-                            boxShadow: '0 8px 25px rgba(255, 107, 107, 0.4)',
-                            position: 'relative',
-                            overflow: 'hidden',
-                            transition: 'all 0.3s ease',
-                            textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.target.style.transform = 'translateY(-2px) scale(1.02)';
-                            e.target.style.boxShadow = '0 12px 35px rgba(255, 107, 107, 0.6)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.target.style.transform = 'translateY(0) scale(1)';
-                            e.target.style.boxShadow = '0 8px 25px rgba(255, 107, 107, 0.4)';
-                          }}
-                        >
-                          <span style={{ position: 'relative', zIndex: 1 }}>🎭 继续抽牌</span>
-                          {/* 按钮光效 */}
-                          <div style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: '-100%',
-                            width: '100%',
-                            height: '100%',
-                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
-                            animation: 'shimmer 3s infinite',
-                            zIndex: 0
-                          }} />
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </Col>
-              </Row>
+                  )}
+                </div>
+              </div>
             </Card>
           </Col>
         )}
@@ -818,4 +800,4 @@ const TianjiuPokerGame = ({ userInfo, isHost, userList }) => {
   );
 };
 
-export default TianjiuPokerGame;
+export default TianjiuPokerGame; 

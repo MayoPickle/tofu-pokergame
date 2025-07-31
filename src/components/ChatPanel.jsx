@@ -21,7 +21,7 @@ const ChatPanel = ({ userInfo }) => {
   useEffect(() => {
     // 监听聊天消息
     socketManager.on('chatMessage', (data) => {
-      console.log('💬 收到聊天消息:', data);
+      console.log('收到聊天消息:', data);
       setMessages(prev => [...prev, {
         id: Date.now() + Math.random(),
         ...data,
@@ -38,7 +38,7 @@ const ChatPanel = ({ userInfo }) => {
     const message = inputValue.trim();
     if (!message) return;
 
-    console.log('💬 发送聊天消息:', message);
+    console.log('发送聊天消息:', message);
     socketManager.emit('chatMessage', {
       message,
       nickname: userInfo.nickname || `玩家${userInfo.userNumber}`
@@ -257,7 +257,7 @@ const ChatPanel = ({ userInfo }) => {
                 background: 'linear-gradient(135deg, #48dbfb, #feca57)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
-              }}>💬</div>
+              }}></div>
               <div style={{ 
                 fontSize: '16px', 
                 fontWeight: '500',
@@ -349,7 +349,7 @@ const ChatPanel = ({ userInfo }) => {
             fontSize: '12px',
             color: 'rgba(255, 255, 255, 0.5)'
           }}>
-            <span>💡 提示: 按回车键发送消息</span>
+            <span>提示: 按回车键发送消息</span>
             <span>{inputValue.length}/200</span>
           </div>
         </div>

@@ -517,20 +517,23 @@ const RoomPage = () => {
                     />
                   )}
                   
-                  <div style={{
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '20px',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                    padding: '20px'
-                  }}>
-                    <UserList 
-                      users={users} 
-                      playerCount={users.length}
-                      currentUserId={userInfo.userId}
-                    />
-                  </div>
+                  {/* 普通模式下显示在线玩家列表 */}
+                  {!isHostMode && (
+                    <div style={{
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      backdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      borderRadius: '20px',
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                      padding: '20px'
+                    }}>
+                      <UserList 
+                        users={users} 
+                        playerCount={users.length}
+                        currentUserId={userInfo.userId}
+                      />
+                    </div>
+                  )}
                   
                   {/* 普通模式或主持人模式都显示聊天面板 */}
                   {!isHostMode && (

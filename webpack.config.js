@@ -1,17 +1,22 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
-  entry: {
-    main: './src/index.js',
-    room: './src/room.js',
-    debug: './src/debug.js'
-  },
-  output: {
-    path: path.resolve(__dirname, 'public/dist'),
-    filename: 'js/[name].bundle.js',
-    clean: true,
-  },
+module.exports = (env, argv) => {
+  const isProduction = argv.mode === 'production';
+  
+  return {
+    entry: {
+      main: './src/index.js',
+      room: './src/room.js',
+      debug: './src/debug.js'
+    },
+    output: {
+      path: path.resolve(__dirname, 'public/dist'),
+      filename: isProduction 
+        ? 'js/[name].[contenthash].bundle.js' 
+        : 'js/[name].bundle.js',
+      clean: true,
+    },
   module: {
     rules: [
       {
@@ -47,8 +52,9 @@ module.exports = {
       title: '甜梦小酒馆 - 调试工具'
     })
   ],
-  resolve: {
-    extensions: ['.js', '.jsx'],
-  },
-  devtool: 'source-map',
+    resolve: {
+      extensions: ['.js', '.jsx'],
+    },
+    devtool: 'source-map',
+  };
 }; 

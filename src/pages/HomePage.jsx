@@ -306,7 +306,7 @@ const HomePage = () => {
                   lineHeight: '1.4',
                   fontWeight: '500'
                 }}>
-                  🌸 温馨可爱的游戏乐园
+                  温馨可爱的游戏乐园
                 </Paragraph>
                 
                 {/* 描述文字 */}
@@ -351,7 +351,7 @@ const HomePage = () => {
                       e.currentTarget.style.boxShadow = '0 8px 32px rgba(255, 107, 157, 0.5)';
                     }}
                   >
-                    💫 创建房间
+                    创建房间
                   </Button>
                   
                   <Button 
@@ -388,7 +388,7 @@ const HomePage = () => {
                       e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
                     }}
                   >
-                    🚀 加入房间
+                    加入房间
                   </Button>
                 </div>
                 
@@ -414,7 +414,7 @@ const HomePage = () => {
                       fontSize: '20px',
                       fontWeight: '600',
                       textAlign: 'center'
-                    }}>🎯 加入现有房间</Title>
+                    }}>加入现有房间</Title>
                     <Paragraph style={{ 
                       color: 'rgba(255, 255, 255, 0.8)', 
                       margin: 0,
@@ -569,8 +569,8 @@ const HomePage = () => {
                     textAlign: 'center',
                     lineHeight: '1.5'
                   }}>
-                    💖 欢迎来到甜梦小酒馆！<br/>
-                    🎉 和朋友们一起玩游戏吧～
+                    欢迎来到甜梦小酒馆！<br/>
+                    和朋友们一起玩游戏吧～
                   </div>
                   {/* 对话框小尾巴 */}
                   <div style={{
@@ -648,7 +648,7 @@ const HomePage = () => {
                   color: 'white',
                   fontSize: '14px',
                   fontWeight: '600'
-                }}>🎮 多样小游戏</Title>
+                }}>多样小游戏</Title>
                 <Paragraph style={{ 
                   color: 'rgba(255, 255, 255, 0.8)', 
                   margin: 0,
@@ -689,7 +689,7 @@ const HomePage = () => {
                   color: 'white',
                   fontSize: '14px',
                   fontWeight: '600'
-                }}>💬 实时互动</Title>
+                }}>实时互动</Title>
                 <Paragraph style={{ 
                   color: 'rgba(255, 255, 255, 0.8)', 
                   margin: 0,
@@ -730,7 +730,7 @@ const HomePage = () => {
                   color: 'white',
                   fontSize: '14px',
                   fontWeight: '600'
-                }}>🏠 温馨空间</Title>
+                }}>温馨空间</Title>
                 <Paragraph style={{ 
                   color: 'rgba(255, 255, 255, 0.8)', 
                   margin: 0,
@@ -879,8 +879,8 @@ const HomePage = () => {
                 lineHeight: '1.4'
               }}>
                 {isHostMode 
-                  ? '🎭 已启用主持人模式 - 您可以手动管理参与者名单'
-                  : '👥 普通模式 - 其他玩家可以通过房间号加入'
+                  ? '已启用主持人模式 - 您可以手动管理参与者名单'
+                  : '普通模式 - 其他玩家可以通过房间号加入'
                 }
               </div>
             </div>
