@@ -489,7 +489,7 @@ const HomePage = () => {
                 justifyContent: 'center',
                 overflow: 'hidden'
               }}>
-                {/* 看板娘背景装饰 - 多层光效 */}
+                {/* 看板娘背景装饰 - 柔和光效 */}
                 <div style={{
                   position: 'absolute',
                   top: '50%',
@@ -497,9 +497,9 @@ const HomePage = () => {
                   transform: 'translate(-50%, -50%)',
                   width: '600px',
                   height: '600px',
-                  background: 'radial-gradient(circle, rgba(255, 182, 193, 0.4), rgba(255, 192, 203, 0.15), transparent)',
+                  background: 'radial-gradient(circle, rgba(255, 182, 193, 0.2), rgba(255, 192, 203, 0.08), transparent)',
                   borderRadius: '50%',
-                  filter: 'blur(30px)',
+                  filter: 'blur(40px)',
                   animation: 'kanbanGlow 6s ease-in-out infinite alternate',
                   zIndex: 0
                 }} />
@@ -511,9 +511,9 @@ const HomePage = () => {
                   transform: 'translate(-50%, -50%)',
                   width: '400px',
                   height: '400px',
-                  background: 'radial-gradient(circle, rgba(255, 107, 157, 0.3), rgba(254, 202, 87, 0.15), transparent)',
+                  background: 'radial-gradient(circle, rgba(255, 107, 157, 0.15), rgba(254, 202, 87, 0.08), transparent)',
                   borderRadius: '50%',
-                  filter: 'blur(20px)',
+                  filter: 'blur(30px)',
                   animation: 'kanbanGlow 4s ease-in-out infinite alternate-reverse',
                   zIndex: 1
                 }} />
@@ -533,58 +533,21 @@ const HomePage = () => {
                       width: '450px',
                       height: 'auto',
                       maxWidth: '90vw',
-                      filter: 'drop-shadow(0 20px 60px rgba(255, 182, 193, 0.5))',
+                      filter: 'drop-shadow(0 20px 60px rgba(255, 182, 193, 0.3))',
                       animation: 'kanbanFloat 8s ease-in-out infinite'
                     }}
                     onMouseEnter={(e) => {
                       e.target.style.transform = 'scale(1.08)';
-                      e.target.style.filter = 'drop-shadow(0 30px 80px rgba(255, 182, 193, 0.8))';
+                      e.target.style.filter = 'drop-shadow(0 30px 80px rgba(255, 182, 193, 0.5))';
                     }}
                     onMouseLeave={(e) => {
                       e.target.style.transform = 'scale(1)';
-                      e.target.style.filter = 'drop-shadow(0 20px 60px rgba(255, 182, 193, 0.5))';
+                      e.target.style.filter = 'drop-shadow(0 20px 60px rgba(255, 182, 193, 0.3))';
                     }}
                   />
                 </div>
                 
-                {/* 看板娘对话框 */}
-                <div style={{
-                  position: 'absolute',
-                  bottom: '10%',
-                  right: '10%',
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(15px)',
-                  padding: '20px 28px',
-                  borderRadius: '24px',
-                  border: '3px solid rgba(255, 182, 193, 0.6)',
-                  boxShadow: '0 12px 48px rgba(255, 182, 193, 0.4)',
-                  maxWidth: '300px',
-                  zIndex: 3,
-                  animation: 'dialogBounce 4s ease-in-out infinite'
-                }}>
-                  <div style={{
-                    color: '#ff6b9d',
-                    fontSize: '16px',
-                    fontWeight: '700',
-                    textAlign: 'center',
-                    lineHeight: '1.5'
-                  }}>
-                    欢迎来到甜梦小酒馆！<br/>
-                    和朋友们一起玩游戏吧～
-                  </div>
-                  {/* 对话框小尾巴 */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '-12px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: 0,
-                    height: 0,
-                    borderLeft: '12px solid transparent',
-                    borderRight: '12px solid transparent',
-                    borderTop: '12px solid rgba(255, 255, 255, 0.95)'
-                  }} />
-                </div>
+
               </div>
             </Col>
           </Row>
@@ -600,14 +563,11 @@ const HomePage = () => {
               }
               
               @keyframes kanbanGlow {
-                0% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
-                100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.15); }
+                0% { opacity: 0.2; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1.08); }
               }
               
-              @keyframes dialogBounce {
-                0%, 100% { transform: translateY(0px) scale(1); }
-                50% { transform: translateY(-8px) scale(1.02); }
-              }
+
               
               @keyframes titleShine {
                 0% { filter: brightness(1) saturate(1); }

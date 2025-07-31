@@ -84654,9 +84654,9 @@ var HomePage = function HomePage() {
       transform: 'translate(-50%, -50%)',
       width: '600px',
       height: '600px',
-      background: 'radial-gradient(circle, rgba(255, 182, 193, 0.4), rgba(255, 192, 203, 0.15), transparent)',
+      background: 'radial-gradient(circle, rgba(255, 182, 193, 0.2), rgba(255, 192, 203, 0.08), transparent)',
       borderRadius: '50%',
-      filter: 'blur(30px)',
+      filter: 'blur(40px)',
       animation: 'kanbanGlow 6s ease-in-out infinite alternate',
       zIndex: 0
     }
@@ -84668,9 +84668,9 @@ var HomePage = function HomePage() {
       transform: 'translate(-50%, -50%)',
       width: '400px',
       height: '400px',
-      background: 'radial-gradient(circle, rgba(255, 107, 157, 0.3), rgba(254, 202, 87, 0.15), transparent)',
+      background: 'radial-gradient(circle, rgba(255, 107, 157, 0.15), rgba(254, 202, 87, 0.08), transparent)',
       borderRadius: '50%',
-      filter: 'blur(20px)',
+      filter: 'blur(30px)',
       animation: 'kanbanGlow 4s ease-in-out infinite alternate-reverse',
       zIndex: 1
     }
@@ -84689,55 +84689,20 @@ var HomePage = function HomePage() {
       width: '450px',
       height: 'auto',
       maxWidth: '90vw',
-      filter: 'drop-shadow(0 20px 60px rgba(255, 182, 193, 0.5))',
+      filter: 'drop-shadow(0 20px 60px rgba(255, 182, 193, 0.3))',
       animation: 'kanbanFloat 8s ease-in-out infinite'
     },
     onMouseEnter: function onMouseEnter(e) {
       e.target.style.transform = 'scale(1.08)';
-      e.target.style.filter = 'drop-shadow(0 30px 80px rgba(255, 182, 193, 0.8))';
+      e.target.style.filter = 'drop-shadow(0 30px 80px rgba(255, 182, 193, 0.5))';
     },
     onMouseLeave: function onMouseLeave(e) {
       e.target.style.transform = 'scale(1)';
-      e.target.style.filter = 'drop-shadow(0 20px 60px rgba(255, 182, 193, 0.5))';
-    }
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    style: {
-      position: 'absolute',
-      bottom: '10%',
-      right: '10%',
-      background: 'rgba(255, 255, 255, 0.95)',
-      backdropFilter: 'blur(15px)',
-      padding: '20px 28px',
-      borderRadius: '24px',
-      border: '3px solid rgba(255, 182, 193, 0.6)',
-      boxShadow: '0 12px 48px rgba(255, 182, 193, 0.4)',
-      maxWidth: '300px',
-      zIndex: 3,
-      animation: 'dialogBounce 4s ease-in-out infinite'
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    style: {
-      color: '#ff6b9d',
-      fontSize: '16px',
-      fontWeight: '700',
-      textAlign: 'center',
-      lineHeight: '1.5'
-    }
-  }, "\u6B22\u8FCE\u6765\u5230\u751C\u68A6\u5C0F\u9152\u9986\uFF01", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), "\u548C\u670B\u53CB\u4EEC\u4E00\u8D77\u73A9\u6E38\u620F\u5427\uFF5E"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    style: {
-      position: 'absolute',
-      bottom: '-12px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      width: 0,
-      height: 0,
-      borderLeft: '12px solid transparent',
-      borderRight: '12px solid transparent',
-      borderTop: '12px solid rgba(255, 255, 255, 0.95)'
+      e.target.style.filter = 'drop-shadow(0 20px 60px rgba(255, 182, 193, 0.3))';
     }
   }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("style", {
     dangerouslySetInnerHTML: {
-      __html: "\n              @keyframes kanbanFloat {\n                0%, 100% { transform: translateY(0px) rotate(0deg); }\n                25% { transform: translateY(-15px) rotate(1deg); }\n                50% { transform: translateY(-20px) rotate(0deg); }\n                75% { transform: translateY(-10px) rotate(-1deg); }\n              }\n              \n              @keyframes kanbanGlow {\n                0% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }\n                100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.15); }\n              }\n              \n              @keyframes dialogBounce {\n                0%, 100% { transform: translateY(0px) scale(1); }\n                50% { transform: translateY(-8px) scale(1.02); }\n              }\n              \n              @keyframes titleShine {\n                0% { filter: brightness(1) saturate(1); }\n                100% { filter: brightness(1.3) saturate(1.2); }\n              }\n            "
+      __html: "\n              @keyframes kanbanFloat {\n                0%, 100% { transform: translateY(0px) rotate(0deg); }\n                25% { transform: translateY(-15px) rotate(1deg); }\n                50% { transform: translateY(-20px) rotate(0deg); }\n                75% { transform: translateY(-10px) rotate(-1deg); }\n              }\n              \n              @keyframes kanbanGlow {\n                0% { opacity: 0.2; transform: translate(-50%, -50%) scale(1); }\n                100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1.08); }\n              }\n              \n\n              \n              @keyframes titleShine {\n                0% { filter: brightness(1) saturate(1); }\n                100% { filter: brightness(1.3) saturate(1.2); }\n              }\n            "
     }
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(antd__WEBPACK_IMPORTED_MODULE_9__["default"], {
     gutter: [20, 20],
